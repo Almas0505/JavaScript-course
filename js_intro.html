@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Сабақтары - Кіріспе</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .lesson-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .lesson-title {
+            font-size: 2.2em;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .lesson-content {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            background: white;
+            color: #f5576c;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-card:hover {
+            transform: scale(1.05);
+        }
+
+        .step-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        .step-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #e17055;
+        }
+
+        .highlight-box strong {
+            color: #d63031;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 10%;
+            border-radius: 10px;
+            transition: width 2s ease;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 JavaScript Сабақтары</h1>
+            <p style="font-size: 1.3em; color: #666;">Интерактивті веб-программалау әлеміне саяхат</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <p><strong>Сабақ 1:</strong> Кіріспе және орта дайындау</p>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">📚</div>
+                JavaScript дегеніміз не?
+            </div>
+            <div class="lesson-content">
+                <p><strong>JavaScript</strong> - бұл веб-беттерді интерактивті ететін программалау тілі. Ол арқылы сіз:</p>
+                <ul style="margin-left: 30px; margin-top: 15px;">
+                    <li>✨ Веб-беттерге анимация қоса аласыз</li>
+                    <li>🎯 Пайдаланушы әрекеттеріне жауап бере аласыз</li>
+                    <li>📊 Динамикалық мазмұн жасай аласыз</li>
+                    <li>🌐 Серверлермен байланыс орната аласыз</li>
+                </ul>
+            </div>
+
+            <div class="interactive-demo">
+                <h3 style="margin-bottom: 20px;">🎮 Интерактивті демо</h3>
+                <p>Төмендегі батырманы басып көріңіз:</p>
+                <button class="demo-button" onclick="showAlert()">Мені басыңыз!</button>
+                <button class="demo-button" onclick="changeColor()">Түсті өзгерту</button>
+                <div id="colorBox" style="width: 100px; height: 100px; background: white; margin: 20px auto; border-radius: 10px; transition: all 0.5s ease;"></div>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">⚙️</div>
+                Орта дайындау
+            </div>
+            <div class="lesson-content">
+                <p>JavaScript жазу үшін тек браузер қажет! Біз мына құралдарды пайдаланамыз:</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Браузер</h3>
+                    <p>Chrome, Firefox, Safari немесе Edge</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Мәтін редакторы</h3>
+                    <p>VS Code, Notepad++ немесе кез келген редактор</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Developer Tools</h3>
+                    <p>F12 батырмасымен ашылады</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>Кеңес:</strong> VS Code редакторын жүктеп алыңыз - ол тегін және өте ыңғайлы!
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">💻</div>
+                Алғашқы код
+            </div>
+            <div class="lesson-content">
+                <p>Келіңіз алғашқы JavaScript кодымызды жазайық:</p>
+
+                <div class="code-block" data-lang="HTML">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Менің алғашқы JavaScript бетім&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1 id="greeting"&gt;Сәлем Әлем!&lt;/h1&gt;
+    &lt;button onclick="changeText()"&gt;Мәтінді өзгерту&lt;/button&gt;
+
+    &lt;script&gt;
+        function changeText() {
+            document.getElementById('greeting').innerHTML = 'JavaScript жұмыс істеп тұр! 🎉';
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+                <div class="interactive-demo">
+                    <h3 style="margin-bottom: 20px;">🔥 Нәтижені көру</h3>
+                    <h2 id="demoGreeting">Сәлем Әлем!</h2>
+                    <button class="demo-button" onclick="changeDemoText()">Мәтінді өзгерту</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">🔍</div>
+                Developer Tools-ты пайдалану
+            </div>
+            <div class="lesson-content">
+                <p>Developer Tools - программистің ең жақын досы:</p>
+                
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">F12</div>
+                        <h3>Ашу</h3>
+                        <p>F12 немесе Ctrl+Shift+I</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">📋</div>
+                        <h3>Console</h3>
+                        <p>JavaScript кодын тікелей орындау</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">🔧</div>
+                        <h3>Elements</h3>
+                        <p>HTML элементтерін көру және өзгерту</p>
+                    </div>
+                </div>
+
+                <div class="code-block" data-lang="JavaScript">
+// Console-да осы кодты сынап көріңіз:
+console.log("Сәлем, Developer Tools!");
+alert("Бұл хабарлама JavaScript арқылы шықты!");
+
+// Айнымалы жасау:
+let myName = "Мендегі есім";
+console.log("Менің есімім: " + myName);</div>
+
+                <div class="interactive-demo">
+                    <h3>🎯 Тапсырма</h3>
+                    <p>F12 басып, Console табын ашып, жоғарыдағы кодты сынап көріңіз!</p>
+                    <button class="demo-button" onclick="openConsoleDemo()">Console демосы</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" disabled>⬅️ Алдыңғы сабақ</button>
+            <span style="font-weight: bold; color: #667eea;">Сабақ 1 / 10</span>
+            <button class="nav-button" onclick="nextLesson()">Келесі сабақ ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        // Интерактивті функциялар
+        function showAlert() {
+            alert('🎉 Сәлем! Сіз JavaScript-ті іске қостыңыз!');
+        }
+
+        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3'];
+        let colorIndex = 0;
+
+        function changeColor() {
+            const colorBox = document.getElementById('colorBox');
+            colorBox.style.background = colors[colorIndex];
+            colorIndex = (colorIndex + 1) % colors.length;
+        }
+
+        function changeDemoText() {
+            const greeting = document.getElementById('demoGreeting');
+            greeting.innerHTML = 'JavaScript жұмыс істеп тұр! 🎉';
+            greeting.style.color = '#667eea';
+        }
+
+        function openConsoleDemo() {
+            console.log('🚀 Сәлем, Developer Tools!');
+            console.log('🎯 Сіз Console табын дұрыс таптыңыз!');
+            console.log('✨ Енді басқа кодтарды да сынап көріңіз!');
+            alert('Console-ды қараңыз! (F12 → Console)');
+        }
+
+        function nextLesson() {
+            alert('🎉 Сәттілікпен! Келесі сабақ дайындалып жатыр...');
+            // Келесі сабаққа өту логикасы
+        }
+
+        // Progress bar анимациясы
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('progressBar').style.width = '100%';
+            }, 1000);
+        }
+
+        // Түнгі/күндізгі режим
+        let isDarkMode = false;
+        
+        // Клавиатура комбинациясы (Ctrl+D)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                toggleDarkMode();
+            }
+        });
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+        }
+    </script>
+</body>
+</html>
