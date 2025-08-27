@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Функциялар мен аргументтер - JavaScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #00b894, #74b9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .function-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .function-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border-left: 6px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .function-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .function-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .card-declaration { border-left-color: #00b894; }
+        .card-expression { border-left-color: #fdcb6e; }
+        .card-arrow { border-left-color: #a29bfe; }
+        .card-anonymous { border-left-color: #fd79a8; }
+
+        .function-title {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: bold;
+        }
+
+        .function-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .icon-declaration { background: #00b894; }
+        .icon-expression { background: #fdcb6e; }
+        .icon-arrow { background: #a29bfe; }
+        .icon-anonymous { background: #fd79a8; }
+
+        .function-playground {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .playground-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .control-group {
+            text-align: left;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: white;
+            font-size: 1.1em;
+        }
+
+        .control-input, .control-select, .control-textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .control-textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .function-result {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .result-success {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            border-color: #00cec9;
+            animation: resultSuccess 0.8s ease;
+        }
+
+        .result-error {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            border-color: #e74c3c;
+            animation: resultError 0.8s ease;
+        }
+
+        .result-info {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border-color: #a8edea;
+            animation: resultInfo 0.8s ease;
+        }
+
+        .arguments-lab {
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            color: white;
+        }
+
+        .arguments-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .argument-input {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .argument-input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .scope-visualizer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .scope-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .scope-level {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .scope-level:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .scope-global { border-left-color: #74b9ff; }
+        .scope-function { border-left-color: #00b894; }
+        .scope-block { border-left-color: #fdcb6e; }
+
+        .code-showcase {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            border-left: 5px solid;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-showcase::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: var(--accent-color, #74b9ff);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .code-declaration { border-left-color: #00b894; --accent-color: #00b894; }
+        .code-expression { border-left-color: #fdcb6e; --accent-color: #fdcb6e; }
+        .code-arrow { border-left-color: #a29bfe; --accent-color: #a29bfe; }
+        .code-advanced { border-left-color: #fd79a8; --accent-color: #fd79a8; }
+
+        .examples-gallery {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            color: white;
+        }
+
+        .example-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #a29bfe;
+            transform: scale(1.05);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .quiz-arena {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            color: white;
+        }
+
+        .quiz-question {
+            font-size: 1.6em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .quiz-option.correct {
+            border-color: #00cec9;
+            background: rgba(0, 206, 201, 0.5);
+            animation: correctBounce 0.8s ease;
+        }
+
+        .quiz-option.wrong {
+            border-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.5);
+            animation: wrongShake 0.8s ease;
+        }
+
+        .interactive-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        .action-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-button:hover {
+            background: white;
+            color: #74b9ff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-200%); }
+            100% { transform: translateX(200%); }
+        }
+
+        @keyframes resultSuccess {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes resultError {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes resultInfo {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes correctBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-15px); }
+            75% { transform: translateX(15px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #00b894, #74b9ff);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .playground-controls {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2.5em;
+            }
+            .function-types {
+                grid-template-columns: 1fr;
+            }
+            .example-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Функциялар мен аргументтер</h1>
+            <p style="font-size: 1.3em; color: #666;">JavaScript-тегі кодты ұйымдастырудың негізі</p>
+        </div>
+
+        <div class="function-types">
+            <div class="function-card card-declaration">
+                <div class="function-title">
+                    <div class="function-icon icon-declaration">📋</div>
+                    Function Declaration
+                </div>
+                <div class="code-showcase code-declaration" data-title="Функция декларациясы">
+// Классикалық тәсіл
+function greet(name) {
+    return "Сәлем, " + name + "!";
+}
+
+// Шақыру
+console.log(greet("Асем")); // "Сәлем, Асем!"
+
+// Hoisting жұмыс істейді
+sayHello(); // Жұмыс істейді!
+
+function sayHello() {
+    console.log("Сәлем әлем!");
+}</div>
+                <div style="background: rgba(0,184,148,0.1); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                    <strong>Ерекшеліктері:</strong><br>
+                    ✅ Hoisting қолдауы<br>
+                    ✅ Барлық жерде шақыруға болады<br>
+                    ✅ Оқуға оңай
+                </div>
+            </div>
+
+            <div class="function-card card-expression">
+                <div class="function-title">
+                    <div class="function-icon icon-expression">📝</div>
+                    Function Expression
+                </div>
+                <div class="code-showcase code-expression" data-title="Функция өрнегі">
+// Айнымалыға тағайындау
+const greet = function(name) {
+    return "Сәлем, " + name + "!";
+};
+
+// Шақыру
+console.log(greet("Берік")); // "Сәлем, Берік!"
+
+// Hoisting жұмыс істемейді
+// sayHello(); // Қате!
+
+const sayHello = function() {
+    console.log("Сәлем әлем!");
+};</div>
+                <div style="background: rgba(253,203,110,0.1); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                    <strong>Ерекшеліктері:</strong><br>
+                    ❌ Hoisting жоқ<br>
+                    ✅ Шартты жасауға болады<br>
+                    ✅ Callback-терде пайдалы
+                </div>
+            </div>
+
+            <div class="function-card card-arrow">
+                <div class="function-title">
+                    <div class="function-icon icon-arrow">⚡</div>
+                    Arrow Function
+                </div>
+                <div class="code-showcase code-arrow" data-title="Жебе функциясы (ES6)">
+// Қысқа жазу тәсілі
+const greet = (name) => {
+    return "Сәлем, " + name + "!";
+};
+
+// Одан да қысқа (бір өрнек)
+const greet2 = name => "Сәлем, " + name + "!";
+
+// Параметрсіз
+const sayHello = () => "Сәлем әлем!";
+
+// Бірнеше параметр
+const add = (a, b) => a + b;</div>
+                <div style="background: rgba(162,155,254,0.1); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                    <strong>Ерекшеліктері:</strong><br>
+                    ✅ Қысқа синтаксис<br>
+                    ✅ Лексикалық this<br>
+                    ❌ Hoisting жоқ
+                </div>
+            </div>
+
+            <div class="function-card card-anonymous">
+                <div class="function-title">
+                    <div class="function-icon icon-anonymous">👤</div>
+                    Anonymous Function
+                </div>
+                <div class="code-showcase code-advanced" data-title="Аноним функциялар">
+// Callback ретінде
+setTimeout(function() {
+    console.log("3 секундтан кейін");
+}, 3000);
+
+// Event listener-де
+button.addEventListener("click", function() {
+    console.log("Батырма басылды!");
+});
+
+// Array методтарында
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(function(num) {
+    return num * 2;
+}); // [2, 4, 6, 8, 10]</div>
+                <div style="background: rgba(253,121,168,0.1); padding: 15px; border-radius: 10px; margin-top: 15px;">
+                    <strong>Ерекшеліктері:</strong><br>
+                    ✅ Callback-терде пайдалы<br>
+                    ✅ Бір рет қолданылады<br>
+                    ❌ Қайта пайдалануға келмейді
+                </div>
+            </div>
+        </div>
+
+        <div class="function-playground">
+            <h2 style="margin-bottom: 30px; font-size: 2.2em;">🎮 Функция ойын алаңы</h2>
+            
+            <div class="playground-controls">
+                <div class="control-group">
+                    <label class="control-label">Функция атауы:</label>
+                    <input type="text" class="control-input" id="functionName" placeholder="myFunction" value="greetUser">
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Параметрлер:</label>
+                    <input type="text" class="control-input" id="functionParams" placeholder="param1, param2" value="name, age">
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Функция коды:</label>
+                    <textarea class="control-textarea" id="functionBody" placeholder="return result;">return `Сәлем ${name}, сіз ${age} жастасыз!`;</textarea>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Функция түрі:</label>
+                    <select class="control-select" id="functionType">
+                        <option value="declaration">Function Declaration</option>
+                        <option value="expression">Function Expression</option>
+                        <option value="arrow">Arrow Function</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="function-result" id="functionResult">
+                Функцияны құрыңыз
+            </div>
+            
+            <div class="interactive-buttons">
+                <button class="action-button" onclick="createFunction()">🔧 Функция құру</button>
+                <button class="action-button" onclick="testFunction()">🧪 Функцияны сынау</button>
+                <button class="action-button" onclick="generateExamples()">📋 Мысалдар генерациялау</button>
+                <button class="action-button" onclick="clearPlayground()">🗑️ Тазалау</button>
+            </div>
+        </div>
+
+        <div class="arguments-lab">
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2em;">📥 Аргументтер зертханасы</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1em;">
+                Функцияға түрлі аргументтер беріп, нәтижесін көріңіз
+            </p>
+            
+            <div class="code-showcase code-advanced" data-title="Тест функциясы">
+function calculateTotal(price, quantity = 1, discount = 0, tax = 0.12) {
+    const subtotal = price * quantity;
+    const discountAmount = subtotal * (discount / 100);
+    const afterDiscount = subtotal - discountAmount;
+    const taxAmount = afterDiscount * tax;
+    const total = afterDiscount + taxAmount;
+    
+    return {
+        subtotal: subtotal,
+        discount: discountAmount,
+        tax: taxAmount,
+        total: total.toFixed(2)
+    };
+}</div>
+            
+            <div class="arguments-demo">
+                <input type="number" class="argument-input" id="arg1" placeholder="Баға (price)" value="1000">
+                <input type="number" class="argument-input" id="arg2" placeholder="Саны (quantity)" value="2">
+                <input type="number" class="argument-input" id="arg3" placeholder="Жеңілдік %" value="10">
+                <input type="number" class="argument-input" id="arg4" placeholder="Салық %" value="12">
+            </div>
+            
+            <div class="function-result" id="argumentsResult">
+                Аргументтерді енгізіңіз
+            </div>
+            
+            <div class="interactive-buttons">
+                <button class="action-button" onclick="calculateWithArgs()">🧮 Есептеу</button>
+                <button class="action-button" onclick="showDefaultValues()">🔧 Default мәндер</button>
+                <button class="action-button" onclick="demonstrateSpread()">📦 Spread оператор</button>
+                <button class="action-button" onclick="showRestParams()">🔗 Rest параметрлер</button>
+            </div>
+        </div>
+
+        <div class="scope-visualizer">
+            <h2 style="text-align: center; color: #2d3436; margin-bottom: 30px;">🌐 Scope (ауқым) визуализаторы</h2>
+            
+            <div class="scope-diagram">
+                <div class="scope-level scope-global" onclick="showScopeExample('global')">
+                    <h3 style="color: #74b9ff; margin-bottom: 10px;">🌍 Global Scope</h3>
+                    <p>Барлық жерден қол жеткізуге болатын айнымалылар</p>
+                    <div style="font-family: 'Courier New', monospace; margin-top: 10px; opacity: 0.8;">
+                        var globalVar = "Мен барлық жерде көрінемін";
+                    </div>
+                </div>
+                
+                <div class="scope-level scope-function" onclick="showScopeExample('function')">
+                    <h3 style="color: #00b894; margin-bottom: 10px;">🔧 Function Scope</h3>
+                    <p>Функция ішінде ғана көрінетін айнымалылар</p>
+                    <div style="font-family: 'Courier New', monospace; margin-top: 10px; opacity: 0.8;">
+                        function myFunc() { var localVar = "Тек осында"; }
+                    </div>
+                </div>
+                
+                <div class="scope-level scope-block" onclick="showScopeExample('block')">
+                    <h3 style="color: #fdcb6e; margin-bottom: 10px;">📦 Block Scope</h3>
+                    <p>Блок {} ішінде ғана көрінетін айнымалылар (let, const)</p>
+                    <div style="font-family: 'Courier New', monospace; margin-top: 10px; opacity: 0.8;">
+                        if (true) { let blockVar = "Тек блокта"; }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-showcase" data-title="Scope мысалы" id="scopeExample">
+// Scope мысалын көру үшін жоғарыдағы карточкаларды басыңыз</div>
+        </div>
+
+        <div class="examples-gallery">
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 2.2em;">💻 Практикалық мысалдар</h2>
+            
+            <div class="example-tabs">
+                <button class="tab-button active" onclick="showTab('basic')">Негізгі функциялар</button>
+                <button class="tab-button" onclick="showTab('parameters')">Параметрлер</button>
+                <button class="tab-button" onclick="showTab('callbacks')">Callback функциялар</button>
+                <button class="tab-button" onclick="showTab('closures')">Closures</button>
+                <button class="tab-button" onclick="showTab('advanced')">Кеңейтілген</button>
+            </div>
+            
+            <div id="basic" class="tab-content active">
+                <h3 style="margin-bottom: 20px;">🔰 Негізгі функциялар</h3>
+                <div class="code-showcase code-declaration" data-title="Математикалық функциялар">
+// Қосу функциясы
+function add(a, b) {
+    return a + b;
+}
+
+// Факториал есептеу
+function factorial(n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+// Сан жұп екенін тексеру
+function isEven(number) {
+    return number % 2 === 0;
+}
+
+// Температураны түрлендіру
+function celsiusToFahrenheit(celsius) {
+    return (celsius * 9/5) + 32;
+}
+
+// Мысалдар:
+console.log(add(5, 3));                    // 8
+console.log(factorial(5));                 // 120
+console.log(isEven(4));                    // true
+console.log(celsiusToFahrenheit(25));      // 77</div>
+            </div>
+            
+            <div id="parameters" class="tab-content">
+                <h3 style="margin-bottom: 20px;">📥 Параметрлермен жұмыс</h3>
+                <div class="code-showcase code-expression" data-title="Default параметрлер">
+// Default мәндері бар функция
+function greetUser(name = "Қонақ", age = 0, city = "Алматы") {
+    return `Сәлем ${name}! Сіз ${age} жастасыз және ${city} қаласында тұрасыз.`;
+}
+
+// Rest параметрлер (...args)
+function sum(...numbers) {
+    return numbers.reduce((total, num) => total + num, 0);
+}
+
+// Destructuring параметрлер
+function createUser({name, email, age = 18}) {
+    return {
+        id: Date.now(),
+        name: name,
+        email: email,
+        age: age,
+        createdAt: new Date()
+    };
+}
+
+// Мысалдар:
+console.log(greetUser());                           // Default мәндер
+console.log(greetUser("Асем", 25, "Астана"));      // Барлық параметрлер
+console.log(sum(1, 2, 3, 4, 5));                   // 15
+console.log(createUser({name: "Берік", email: "berik@test.com"}));</div>
+            </div>
+            
+            <div id="callbacks" class="tab-content">
+                <h3 style="margin-bottom: 20px;">🔄 Callback функциялар</h3>
+                <div class="code-showcase code-arrow" data-title="Callback мысалдары">
+// Callback функциясы
+function processArray(arr, callback) {
+    const result = [];
+    for (let i = 0; i < arr.length; i++) {
+        result.push(callback(arr[i], i));
+    }
+    return result;
+}
+
+// Асинхронды callback
+function fetchData(callback) {
+    setTimeout(() => {
+        const data = {users: ["Асем", "Берік", "Айжан"]};
+        callback(data);
+    }, 1000);
+}
+
+// Event callback
+function setupButton(buttonId, clickCallback) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+        button.addEventListener('click', clickCallback);
+    }
+}
+
+// Мысалдар:
+const numbers = [1, 2, 3, 4, 5];
+
+// Әр элементті 2-ге көбейту
+const doubled = processArray(numbers, (num) => num * 2);
+console.log(doubled); // [2, 4, 6, 8, 10]
+
+// Индекспен қосу
+const withIndex = processArray(numbers, (num, index) => num + index);
+console.log(withIndex); // [1, 3, 5, 7, 9]
+
+// Асинхронды деректерді алу
+fetchData((data) => {
+    console.log("Алынған деректер:", data);
+});</div>
+            </div>
+            
+            <div id="closures" class="tab-content">
+                <h3 style="margin-bottom: 20px;">🔒 Closures (жабу)</h3>
+                <div class="code-showcase code-advanced" data-title="Closure мысалдары">
+// Қарапайым closure
+function outerFunction(x) {
+    // Сыртқы айнымалы
+    return function innerFunction(y) {
+        return x + y; // x-ке қол жеткізе алады
+    };
+}
+
+// Counter функциясы
+function createCounter() {
+    let count = 0;
+    return {
+        increment: () => ++count,
+        decrement: () => --count,
+        getCount: () => count,
+        reset: () => count = 0
+    };
+}
+
+// Module pattern
+function createCalculator() {
+    let result = 0;
+    
+    return {
+        add: (num) => {
+            result += num;
+            return result;
+        },
+        subtract: (num) => {
+            result -= num;
+            return result;
+        },
+        multiply: (num) => {
+            result *= num;
+            return result;
+        },
+        getResult: () => result,
+        clear: () => {
+            result = 0;
+            return result;
+        }
+    };
+}
+
+// Мысалдар:
+const addFive = outerFunction(5);
+console.log(addFive(3)); // 8
+
+const counter = createCounter();
+console.log(counter.increment()); // 1
+console.log(counter.increment()); // 2
+console.log(counter.getCount());  // 2
+
+const calc = createCalculator();
+console.log(calc.add(10));      // 10
+console.log(calc.multiply(2));  // 20
+console.log(calc.subtract(5));  // 15</div>
+            </div>
+            
+            <div id="advanced" class="tab-content">
+                <h3 style="margin-bottom: 20px;">🚀 Кеңейтілген техникалар</h3>
+                <div class="code-showcase code-advanced" data-title="Кеңейтілген функциялар">
+// Higher-order function
+function createMultiplier(factor) {
+    return (number) => number * factor;
+}
+
+// Function composition
+function compose(f, g) {
+    return (x) => f(g(x));
+}
+
+// Currying
+function curry(fn) {
+    return function curried(...args) {
+        if (args.length >= fn.length) {
+            return fn.apply(this, args);
+        } else {
+            return function(...args2) {
+                return curried.apply(this, args.concat(args2));
+            };
+        }
+    };
+}
+
+// Memoization
+function memoize(fn) {
+    const cache = {};
+    return function(...args) {
+        const key = JSON.stringify(args);
+        if (key in cache) {
+            return cache[key];
+        }
+        const result = fn.apply(this, args);
+        cache[key] = result;
+        return result;
+    };
+}
+
+// Мысалдар:
+const double = createMultiplier(2);
+const triple = createMultiplier(3);
+console.log(double(5)); // 10
+console.log(triple(4)); // 12
+
+// Function composition
+const addOne = x => x + 1;
+const multiplyByTwo = x => x * 2;
+const addOneThenDouble = compose(multiplyByTwo, addOne);
+console.log(addOneThenDouble(3)); // 8
+
+// Curried function
+const curriedAdd = curry((a, b, c) => a + b + c);
+console.log(curriedAdd(1)(2)(3)); // 6
+console.log(curriedAdd(1, 2)(3)); // 6
+
+// Memoized function
+const expensiveFunction = memoize((n) => {
+    console.log("Есептеуде...");
+    return n * n;
+});
+console.log(expensiveFunction(5)); // Есептеуде... 25
+console.log(expensiveFunction(5)); // 25 (cache-тен)</div>
+            </div>
+        </div>
+
+        <div class="quiz-arena">
+            <div class="quiz-question">🧠 Сұрақ 1: Function declaration мен function expression арасындағы айырмашылық не?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Hoisting')">Жылдамдық</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, true, 'Hoisting')">Hoisting</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Hoisting')">Синтаксис</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Hoisting')">Ештеме</div>
+            </div>
+        </div>
+
+        <div class="quiz-arena">
+            <div class="quiz-question">🤔 Сұрақ 2: Arrow function-да this қалай жұмыс істейді?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Лексикалық this')">Қалыпты this</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, true, 'Лексикалық this')">Лексикалық this</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Лексикалық this')">this жоқ</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Лексикалық this')">Динамикалық this</div>
+            </div>
+        </div>
+
+        <div class="quiz-arena">
+            <div class="quiz-question">💭 Сұрақ 3: Closure дегеніміз не?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Сыртқы scope-қа қол жеткізу')">Функция түрі</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, true, 'Сыртқы scope-қа қол жеткізу')">Сыртқы scope-қа қол жеткізу</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Сыртқы scope-қа қол жеткізу')">Айнымалы түрі</div>
+                <div class="quiz-option" onclick="checkQuizAnswer(this, false, 'Сыртқы scope-қа қол жеткізу')">Объект</div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" onclick="previousLesson()">⬅️ Алдыңғы сабақ</button>
+            <span style="font-weight: bold; color: #667eea;">Функциялар мен аргументтер</span>
+            <button class="nav-button" onclick="nextLesson()">Келесі сабақ ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        // Жасалған функция сақтау
+        let createdFunction = null;
+
+        // Функция құру
+        function createFunction() {
+            const name = document.getElementById('functionName').value || 'myFunction';
+            const params = document.getElementById('functionParams').value || '';
+            const body = document.getElementById('functionBody').value || 'return "Hello World!";';
+            const type = document.getElementById('functionType').value;
+            
+            let code = '';
+            let resultMessage = '';
+            
+            try {
+                switch(type) {
+                    case 'declaration':
+                        code = `function ${name}(${params}) {\n    ${body}\n}`;
+                        createdFunction = new Function(params, body);
+                        resultMessage = `✅ Function Declaration құрылды:\n${code}`;
+                        break;
+                        
+                    case 'expression':
+                        code = `const ${name} = function(${params}) {\n    ${body}\n};`;
+                        createdFunction = new Function(params, body);
+                        resultMessage = `✅ Function Expression құрылды:\n${code}`;
+                        break;
+                        
+                    case 'arrow':
+                        if (body.includes('return') && body.split('\n').length === 1) {
+                            const returnValue = body.replace('return ', '').replace(';', '');
+                            code = `const ${name} = (${params}) => ${returnValue};`;
+                        } else {
+                            code = `const ${name} = (${params}) => {\n    ${body}\n};`;
+                        }
+                        createdFunction = new Function(params, body);
+                        resultMessage = `✅ Arrow Function құрылды:\n${code}`;
+                        break;
+                }
+                
+                const resultElement = document.getElementById('functionResult');
+                resultElement.innerHTML = `
+                    <div style="font-size: 1.1em; margin-bottom: 15px;">${resultMessage}</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">Енді "Функцияны сынау" батырмасын басыңыз</div>
+                `;
+                resultElement.className = 'function-result result-success';
+                
+                // Console-ға жазу
+                console.log('Құрылған функция:');
+                console.log(code);
+                
+            } catch (error) {
+                const resultElement = document.getElementById('functionResult');
+                resultElement.innerHTML = `
+                    <div style="font-size: 1.1em; margin-bottom: 10px;">❌ Қате орын алды:</div>
+                    <div style="font-size: 0.9em;">${error.message}</div>
+                `;
+                resultElement.className = 'function-result result-error';
+            }
+        }
+
+        // Функцияны сынау
+        function testFunction() {
+            if (!createdFunction) {
+                alert('Алдымен функция құрыңыз!');
+                return;
+            }
+            
+            const params = document.getElementById('functionParams').value || '';
+            const paramArray = params.split(',').map(p => p.trim()).filter(p => p);
+            
+            // Тест мәндерін сұрау
+            const testValues = [];
+            for (let param of paramArray) {
+                let value = prompt(`${param} параметрі үшін мән енгізіңіз:`);
+                if (value === null) return; // Отмена
+                
+                // Санды болса түрлендіру
+                if (!isNaN(value) && value !== '') {
+                    value = Number(value);
+                } else if (value === 'true') {
+                    value = true;
+                } else if (value === 'false') {
+                    value = false;
+                }
+                
+                testValues.push(value);
+            }
+            
+            try {
+                const result = createdFunction.apply(null, testValues);
+                const resultElement = document.getElementById('functionResult');
+                resultElement.innerHTML = `
+                    <div style="font-size: 1.2em; margin-bottom: 15px;">🎉 Функция нәтижесі:</div>
+                    <div style="font-size: 1.1em; font-weight: bold;">${JSON.stringify(result)}</div>
+                    <div style="font-size: 0.9em; opacity: 0.8; margin-top: 10px;">
+                        Параметрлер: ${testValues.join(', ')}
+                    </div>
+                `;
+                resultElement.className = 'function-result result-success';
+                
+                console.log('Функция нәтижесі:', result);
+                
+            } catch (error) {
+                const resultElement = document.getElementById('functionResult');
+                resultElement.innerHTML = `
+                    <div style="font-size: 1.1em; margin-bottom: 10px;">❌ Орындау қатесі:</div>
+                    <div style="font-size: 0.9em;">${error.message}</div>
+                `;
+                resultElement.className = 'function-result result-error';
+            }
+        }
+
+        // Мысалдар генерациялау
+        function generateExamples() {
+            const examples = [
+                {
+                    name: 'calculateArea',
+                    params: 'width, height',
+                    body: 'return width * height;',
+                    type: 'declaration'
+                },
+                {
+                    name: 'greetUser',
+                    params: 'name, age',
+                    body: 'return `Сәлем ${name}, сіз ${age} жастасыз!`;',
+                    type: 'arrow'
+                },
+                {
+                    name: 'isPositive',
+                    params: 'number',
+                    body: 'return number > 0;',
+                    type: 'expression'
+                },
+                {
+                    name: 'formatPrice',
+                    params: 'price, currency = "₸"',
+                    body: 'return `${price}${currency}`;',
+                    type: 'arrow'
+                }
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            
+            document.getElementById('functionName').value = randomExample.name;
+            document.getElementById('functionParams').value = randomExample.params;
+            document.getElementById('functionBody').value = randomExample.body;
+            document.getElementById('functionType').value = randomExample.type;
+            
+            createFunction();
+        }
+
+        function clearPlayground() {
+            document.getElementById('functionName').value = '';
+            document.getElementById('functionParams').value = '';
+            document.getElementById('functionBody').value = '';
+            document.getElementById('functionResult').innerHTML = 'Функцияны құрыңыз';
+            document.getElementById('functionResult').className = 'function-result';
+            createdFunction = null;
+        }
+
+        // Аргументтермен есептеу
+        function calculateWithArgs() {
+            const price = parseFloat(document.getElementById('arg1').value) || 0;
+            const quantity = parseFloat(document.getElementById('arg2').value) || 1;
+            const discount = parseFloat(document.getElementById('arg3').value) || 0;
+            const tax = parseFloat(document.getElementById('arg4').value) || 12;
+            
+            // Есептеу функциясы
+            function calculateTotal(price, quantity = 1, discount = 0, tax = 0.12) {
+                const subtotal = price * quantity;
+                const discountAmount = subtotal * (discount / 100);
+                const afterDiscount = subtotal - discountAmount;
+                const taxAmount = afterDiscount * (tax / 100);
+                const total = afterDiscount + taxAmount;
+                
+                return {
+                    subtotal: subtotal.toFixed(2),
+                    discount: discountAmount.toFixed(2),
+                    tax: taxAmount.toFixed(2),
+                    total: total.toFixed(2)
+                };
+            }
+            
+            const result = calculateTotal(price, quantity, discount, tax);
+            
+            const resultElement = document.getElementById('argumentsResult');
+            resultElement.innerHTML = `
+                <div style="font-size: 1.2em; margin-bottom: 15px;">💰 Есептеу нәтижесі:</div>
+                <div style="text-align: left; line-height: 1.6;">
+                    Аралық сома: ${result.subtotal}₸<br>
+                    Жеңілдік: -${result.discount}₸<br>
+                    Салық: +${result.tax}₸<br>
+                    <strong>Жалпы: ${result.total}₸</strong>
+                </div>
+            `;
+            resultElement.className = 'function-result result-success';
+        }
+
+        // Default мәндерді көрсету
+        function showDefaultValues() {
+            const resultElement = document.getElementById('argumentsResult');
+            resultElement.innerHTML = `
+                <div style="font-size: 1.1em; margin-bottom: 15px;">🔧 Default параметрлер:</div>
+                <div style="text-align: left; line-height: 1.8; font-family: 'Courier New', monospace;">
+                    function calculate(price, quantity = 1, discount = 0, tax = 0.12)<br><br>
+                    quantity: ${document.getElementById('arg2').value || '1 (default)'}<br>
+                    discount: ${document.getElementById('arg3').value || '0 (default)'}<br>
+                    tax: ${document.getElementById('arg4').value || '12 (default)'}
+                </div>
+            `;
+            resultElement.className = 'function-result result-info';
+        }
+
+        // Spread операторды көрсету
+        function demonstrateSpread() {
+            const prices = [1000, 2000, 3000, 4000, 5000];
+            const maxPrice = Math.max(...prices);
+            const minPrice = Math.min(...prices);
+            
+            const resultElement = document.getElementById('argumentsResult');
+            resultElement.innerHTML = `
+                <div style="font-size: 1.1em; margin-bottom: 15px;">📦 Spread оператор мысалы:</div>
+                <div style="text-align: left; line-height: 1.8; font-family: 'Courier New', monospace;">
+                    const prices = [${prices.join(', ')}];<br>
+                    Math.max(...prices) = ${maxPrice}₸<br>
+                    Math.min(...prices) = ${minPrice}₸<br><br>
+                    Spread (...) массивті жеке элементтерге бөледі
+                </div>
+            `;
+            resultElement.className = 'function-result result-info';
+        }
+
+        // Rest параметрлерді көрсету
+        function showRestParams() {
+            function sumAll(...numbers) {
+                return numbers.reduce((sum, num) => sum + num, 0);
+            }
+            
+            const testNumbers = [1, 2, 3, 4, 5];
+            const sum = sumAll(...testNumbers);
+            
+            const resultElement = document.getElementById('argumentsResult');
+            resultElement.innerHTML = `
+                <div style="font-size: 1.1em; margin-bottom: 15px;">🔗 Rest параметрлер мысалы:</div>
+                <div style="text-align: left; line-height: 1.8; font-family: 'Courier New', monospace;">
+                    function sumAll(...numbers) {<br>
+                    &nbsp;&nbsp;return numbers.reduce((sum, num) => sum + num, 0);<br>
+                    }<br><br>
+                    sumAll(${testNumbers.join(', ')}) = ${sum}<br><br>
+                    Rest (...) барлық аргументтерді массивке жинайды
+                </div>
+            `;
+            resultElement.className = 'function-result result-info';
+        }
+
+        // Scope мысалдарын көрсету
+        function showScopeExample(scopeType) {
+            const examples = {
+                global: `// 🌍 Global Scope мысалы
+var globalMessage = "Мен барлық жерде көрінемін";
+let globalCount = 0;
+
+function incrementGlobal() {
+    globalCount++; // Global айнымалыға қол жеткізу
+    console.log(globalMessage); // "Мен барлық жерде көрінемін"
+}
+
+console.log(globalCount); // 0
+incrementGlobal();
+console.log(globalCount); // 1`,
+
+                function: `// 🔧 Function Scope мысалы
+function myFunction() {
+    var functionScoped = "Мен тек функция ішінде көрінемін";
+    let alsoFunctionScoped = "Мен де тек функция ішінде";
+    
+    console.log(functionScoped); // Жұмыс істейді
+    
+    function innerFunction() {
+        console.log(functionScoped); // Ішкі функциядан да көрінеді
+    }
+    
+    innerFunction();
+}
+
+myFunction();
+// console.log(functionScoped); // ReferenceError!`,
+
+                block: `// 📦 Block Scope мысалы
+if (true) {
+    let blockScoped = "Мен тек блок ішінде көрінемін";
+    const alsoBlockScoped = "Мен де блок ішінде";
+    var notBlockScoped = "Мен function-scoped-пын";
+    
+    console.log(blockScoped); // Жұмыс істейді
+}
+
+// console.log(blockScoped); // ReferenceError!
+console.log(notBlockScoped); // Жұмыс істейді (var)
+
+for (let i = 0; i < 3; i++) {
+    // i тек loop ішінде көрінеді
+    console.log(i); // 0, 1, 2
+}
+// console.log(i); // ReferenceError!`
+            };
+            
+            document.getElementById('scopeExample').textContent = examples[scopeType];
+        }
+
+        // Tab жүйесі
+        function showTab(tabName) {
+            // Барлық tab-тарды жасыру
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Таңдалған tab-ты көрсету
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Викторина функциясы
+        function checkQuizAnswer(element, isCorrect, correctAnswer) {
+            // Бұрын басылған жауаптарды тазалау
+            element.parentNode.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+                opt.innerHTML = opt.innerHTML.replace(' ✅', '').replace(' ❌', '');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.innerHTML += ' ✅';
+                setTimeout(() => {
+                    alert(`🎉 Дұрыс! Жауабы: ${correctAnswer}`);
+                }, 400);
+            } else {
+                element.classList.add('wrong');
+                element.innerHTML += ' ❌';
+                
+                // Дұрыс жауапты көрсету
+                element.parentNode.querySelectorAll('.quiz-option').forEach(opt => {
+                    if (opt.innerHTML.includes(correctAnswer) && !opt.classList.contains('wrong')) {
+                        opt.classList.add('correct');
+                        opt.innerHTML += ' ✅ (дұрыс)';
+                    }
+                });
+                
+                setTimeout(() => {
+                    alert(`❌ Дұрыс емес. Дұрыс жауабы: ${correctAnswer}`);
+                }, 400);
+            }
+        }
+
+        // Навигация
+        function previousLesson() {
+            alert('🔄 Алдыңғы сабаққа оралу: "Switch операторы"');
+        }
+
+        function nextLesson() {
+            alert('🚀 Келесі сабақ: "Массивтер мен объекттер"');
+        }
+
+        // Автоматты жаңарту
+        document.getElementById('arg1').addEventListener('input', calculateWithArgs);
+        document.getElementById('arg2').addEventListener('input', calculateWithArgs);
+        document.getElementById('arg3').addEventListener('input', calculateWithArgs);
+        document.getElementById('arg4').addEventListener('input', calculateWithArgs);
+
+        // Бастапқы орнату
+        window.onload = function() {
+            calculateWithArgs();
+            
+            // Console-ға мысалдар
+            setTimeout(() => {
+                console.log('🔧 Функциялар мен аргументтер мысалдары:');
+                
+                console.log('\n📋 Function Declaration:');
+                function greet(name) {
+                    return "Сәлем, " + name + "!";
+                }
+                console.log('greet("Асем"):', greet("Асем"));
+                
+                console.log('\n📝 Function Expression:');
+                const multiply = function(a, b) {
+                    return a * b;
+                };
+                console.log('multiply(4, 5):', multiply(4, 5));
+                
+                console.log('\n⚡ Arrow Function:');
+                const add = (a, b) => a + b;
+                const square = x => x * x;
+                console.log('add(3, 7):', add(3, 7));
+                console.log('square(6):', square(6));
+                
+                console.log('\n🔧 Default параметрлер:');
+                function createUser(name, age = 18, city = "Алматы") {
+                    return `${name}, ${age} жас, ${city}`;
+                }
+                console.log('createUser("Берік"):', createUser("Берік"));
+                console.log('createUser("Айжан", 25, "Астана"):', createUser("Айжан", 25, "Астана"));
+            }, 2000);
+            
+            // Rest және Spread мысалдары
+            setTimeout(() => {
+                console.log('\n🔗 Rest параметрлер:');
+                function sumAll(...numbers) {
+                    return numbers.reduce((sum, num) => sum + num, 0);
+                }
+                console.log('sumAll(1, 2, 3, 4, 5):', sumAll(1, 2, 3, 4, 5));
+                
+                console.log('\n📦 Spread оператор:');
+                const arr1 = [1, 2, 3];
+                const arr2 = [4, 5, 6];
+                const combined = [...arr1, ...arr2];
+                console.log('Біріктірілген массив:', combined);
+                
+                console.log('\n🔄 Callback функциялар:');
+                function processData(data, callback) {
+                    const result = data.map(callback);
+                    return result;
+                }
+                const numbers = [1, 2, 3, 4, 5];
+                const doubled = processData(numbers, x => x * 2);
+                console.log('Екі еселенген:', doubled);
+            }, 5000);
+            
+            // Closure мысалдары
+            setTimeout(() => {
+                console.log('\n🔒 Closure мысалдары:');
+                
+                function createCounter() {
+                    let count = 0;
+                    return {
+                        increment: () => ++count,
+                        decrement: () => --count,
+                        getCount: () => count
+                    };
+                }
+                
+                const counter = createCounter();
+                console.log('counter.increment():', counter.increment());
+                console.log('counter.increment():', counter.increment());
+                console.log('counter.getCount():', counter.getCount());
+                console.log('counter.decrement():', counter.decrement());
+                
+                console.log('\n🎯 Higher-order функциялар:');
+                function createMultiplier(factor) {
+                    return (number) => number * factor;
+                }
+                
+                const double = createMultiplier(2);
+                const triple = createMultiplier(3);
+                console.log('double(5):', double(5));
+                console.log('triple(4):', triple(4));
+                
+                console.log('\n🔧 Function composition:');
+                const addOne = x => x + 1;
+                const multiplyByTwo = x => x * 2;
+                const compose = (f, g) => x => f(g(x));
+                const addOneThenDouble = compose(multiplyByTwo, addOne);
+                console.log('addOneThenDouble(3):', addOneThenDouble(3)); // (3 + 1) * 2 = 8
+            }, 8000);
+            
+            // Практикалық мысалдар
+            setTimeout(() => {
+                console.log('\n💻 Практикалық мысалдар:');
+                
+                // Array методтары
+                const users = [
+                    {name: "Асем", age: 25},
+                    {name: "Берік", age: 30},
+                    {name: "Айжан", age: 22}
+                ];
+                
+                // Filter function
+                const adults = users.filter(user => user.age >= 25);
+                console.log('Ересектер (>=25):', adults);
+                
+                // Map function
+                const names = users.map(user => user.name);
+                console.log('Аттар:', names);
+                
+                // Reduce function
+                const totalAge = users.reduce((sum, user) => sum + user.age, 0);
+                console.log('Жалпы жас:', totalAge);
+                
+                console.log('\n🔍 Find функциясы:');
+                const findUser = (name) => users.find(user => user.name === name);
+                console.log('findUser("Берік"):', findUser("Берік"));
+                
+                console.log('\n📊 Sort функциясы:');
+                const sortedByAge = [...users].sort((a, b) => a.age - b.age);
+                console.log('Жас бойынша сұрыпталған:', sortedByAge);
+            }, 11000);
+            
+            // Асинхронды функциялар
+            setTimeout(() => {
+                console.log('\n⏰ Асинхронды функциялар:');
+                
+                // setTimeout with callback
+                function delayedGreeting(name, delay, callback) {
+                    setTimeout(() => {
+                        const message = `Сәлем ${name}! ${delay}ms кешікті.`;
+                        callback(message);
+                    }, delay);
+                }
+                
+                delayedGreeting("Қонақ", 1000, (message) => {
+                    console.log('Кешіктірілген хабарлама:', message);
+                });
+                
+                // Promise-based function
+                function fetchUserData(userId) {
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            if (userId > 0) {
+                                resolve({id: userId, name: `User ${userId}`, active: true});
+                            } else {
+                                reject(new Error("Дұрыс емес User ID"));
+                            }
+                        }, 500);
+                    });
+                }
+                
+                fetchUserData(1)
+                    .then(user => console.log('Табылған пайдаланушы:', user))
+                    .catch(error => console.log('Қате:', error.message));
+                
+                console.log('\n🚀 ES6+ функция ерекшеліктері:');
+                
+                // Destructuring parameters
+                function createProfile({name, age, city = "Алматы"}) {
+                    return `${name} (${age} жас) - ${city}`;
+                }
+                
+                const userData = {name: "Камила", age: 28};
+                console.log('createProfile(userData):', createProfile(userData));
+                
+                // Template literals in functions
+                function generateEmailTemplate(user, subject) {
+                    return `
+                        Кімге: ${user.email}
+                        Тақырып: ${subject}
+                        
+                        Сәлем ${user.name}!
+                        
+                        Сіздің жасыңыз: ${user.age}
+                        Тіркелген күні: ${new Date().toLocaleDateString('kk-KZ')}
+                    `;
+                }
+                
+                const testUser = {name: "Ерлан", email: "erlan@test.com", age: 32};
+                console.log('Email template:', generateEmailTemplate(testUser, "Қош келдіңіз!"));
+            }, 14000);
+        };
+
+        // Клавиатура shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                createFunction();
+            }
+            if (e.key === 'Escape') {
+                clearPlayground();
+            }
+            if (e.key === 't' && e.ctrlKey) {
+                e.preventDefault();
+                testFunction();
+            }
+            
+            // Tab shortcuts
+            if (e.ctrlKey) {
+                switch(e.key) {
+                    case '1': showTab('basic'); break;
+                    case '2': showTab('parameters'); break;
+                    case '3': showTab('callbacks'); break;
+                    case '4': showTab('closures'); break;
+                    case '5': showTab('advanced'); break;
+                }
+            }
+        });
+
+        // Performance анализі
+        function analyzeFunctionPerformance() {
+            console.log('🏃 Функция өнімділігін талдау:');
+            
+            const iterations = 1000000;
+            
+            // Function declaration
+            console.time('Function Declaration');
+            function testDeclaration(x) { return x * 2; }
+            for (let i = 0; i < iterations; i++) {
+                testDeclaration(i);
+            }
+            console.timeEnd('Function Declaration');
+            
+            // Function expression
+            console.time('Function Expression');
+            const testExpression = function(x) { return x * 2; };
+            for (let i = 0; i < iterations; i++) {
+                testExpression(i);
+            }
+            console.timeEnd('Function Expression');
+            
+            // Arrow function
+            console.time('Arrow Function');
+            const testArrow = x => x * 2;
+            for (let i = 0; i < iterations; i++) {
+                testArrow(i);
+            }
+            console.timeEnd('Arrow Function');
+            
+            console.log('📊 Нәтиже: Барлық функция түрлері ұқсас өнімділікке ие');
+        }
+
+        // Memory usage демонстрациясы
+        function demonstrateMemoryUsage() {
+            console.log('💾 Memory usage мысалы:');
+            
+            // Closure-мен memory leak
+            function createLeakyFunction() {
+                const largeArray = new Array(1000000).fill('data');
+                return function() {
+                    return largeArray.length; // largeArray әлі де жадыда
+                };
+            }
+            
+            // Дұрыс тәсіл
+            function createCleanFunction() {
+                const size = 1000000;
+                return function() {
+                    return size; // Тек размер сақталады
+                };
+            }
+            
+            console.log('⚠️ Closure-лар жадыны басқаруда мұқият болу керек');
+            console.log('💡 Қажет емес сілтемелерді null етіп қою керек');
+        }
+
+        // Утилита функциялары
+        const FunctionUtils = {
+            // Debounce
+            debounce: function(func, delay) {
+                let timeoutId;
+                return function(...args) {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => func.apply(this, args), delay);
+                };
+            },
+            
+            // Throttle
+            throttle: function(func, limit) {
+                let inThrottle;
+                return function(...args) {
+                    if (!inThrottle) {
+                        func.apply(this, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            },
+            
+            // Once (тек бір рет орындалатын функция)
+            once: function(func) {
+                let called = false;
+                return function(...args) {
+                    if (!called) {
+                        called = true;
+                        return func.apply(this, args);
+                    }
+                };
+            },
+            
+            // Pipe (функцияларды тізбектеп орындау)
+            pipe: function(...functions) {
+                return function(value) {
+                    return functions.reduce((acc, func) => func(acc), value);
+                };
+            }
+        };
+
+        // Утилиталарды global қосу
+        window.FunctionUtils = FunctionUtils;
+        window.analyzeFunctionPerformance = analyzeFunctionPerformance;
+        window.demonstrateMemoryUsage = demonstrateMemoryUsage;
+        
+        console.log('🔧 Функция утилиталары қолжетімді:');
+        console.log('- FunctionUtils.debounce(), throttle(), once(), pipe()');
+        console.log('- analyzeFunctionPerformance()');
+        console.log('- demonstrateMemoryUsage()');
+    </script>
+</body>
+</html>
