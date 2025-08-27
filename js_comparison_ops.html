@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Салыстыру операторлары - JavaScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #e17055, #74b9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .comparison-battle {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 30px;
+            margin: 40px 0;
+            align-items: center;
+        }
+
+        .vs-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vs-card.equals {
+            border-left: 8px solid #00b894;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .vs-card.strict {
+            border-left: 8px solid #e17055;
+            animation: slideInRight 1s ease-out;
+        }
+
+        .vs-divider {
+            background: linear-gradient(to bottom, #00b894, #e17055);
+            width: 6px;
+            height: 250px;
+            border-radius: 10px;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .vs-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 24px;
+            color: #2d3436;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .operators-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .operator-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .operator-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .operator-card:hover::before {
+            opacity: 1;
+        }
+
+        .operator-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .operator-symbol {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .operator-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .operator-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .interactive-tester {
+            background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .tester-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto;
+            gap: 15px;
+            align-items: center;
+            margin: 30px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tester-input {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .operator-selector {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            cursor: pointer;
+        }
+
+        .test-result {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-true {
+            background: rgba(0, 184, 148, 0.3);
+            border: 2px solid #00b894;
+        }
+
+        .result-false {
+            background: rgba(225, 112, 85, 0.3);
+            border: 2px solid #e17055;
+        }
+
+        .truth-table {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #f1f3f4;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .true-cell {
+            background: rgba(0, 184, 148, 0.1);
+            color: #00b894;
+            font-weight: bold;
+        }
+
+        .false-cell {
+            background: rgba(225, 112, 85, 0.1);
+            color: #e17055;
+            font-weight: bold;
+        }
+
+        .quiz-arena {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+            color: white;
+        }
+
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .quiz-option.correct {
+            border-color: #00cec9;
+            background: rgba(0, 206, 201, 0.4);
+            animation: correctPulse 0.6s ease;
+        }
+
+        .quiz-option.wrong {
+            border-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.4);
+            animation: wrongShake 0.6s ease;
+        }
+
+        .code-example {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            border-left: 5px solid #74b9ff;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-example::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #74b9ff;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #e17055;
+            color: #2d3436;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #81ecec 0%, #74b9ff 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .demo-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: white;
+            color: #fd79a8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.1); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(116, 185, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .comparison-battle {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .vs-divider {
+                display: none;
+            }
+            .tester-inputs {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .header h1 {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚖️ Салыстыру операторлары</h1>
+            <p style="font-size: 1.3em; color: #666;">JavaScript-тегі шарттар мен салыстырулар</p>
+        </div>
+
+        <div class="comparison-battle">
+            <div class="vs-card equals">
+                <div style="font-size: 4em; margin-bottom: 20px;">==</div>
+                <h2 style="color: #00b894; margin-bottom: 15px;">Жұмсақ салыстыру</h2>
+                <p style="text-align: center; line-height: 1.6;">
+                    Түрлендіру жасап салыстырады<br>
+                    <strong>"5" == 5 → true</strong>
+                </p>
+            </div>
+
+            <div class="vs-divider">
+                <div class="vs-text">VS</div>
+            </div>
+
+            <div class="vs-card strict">
+                <div style="font-size: 4em; margin-bottom: 20px;">===</div>
+                <h2 style="color: #e17055; margin-bottom: 15px;">Қатаң салыстыру</h2>
+                <p style="text-align: center; line-height: 1.6;">
+                    Түрін де тексереді<br>
+                    <strong>"5" === 5 → false</strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="truth-table">
+            <h2 style="text-align: center; color: #2d3436; margin-bottom: 30px;">📊 Барлық салыстыру операторлары</h2>
+            
+            <div class="operators-showcase">
+                <div class="operator-card" onclick="showOperatorExample('==')">
+                    <div class="operator-symbol">==</div>
+                    <div class="operator-name">Тең</div>
+                    <div class="operator-desc">5 == "5" → true</div>
+                </div>
+                
+                <div class="operator-card" onclick="showOperatorExample('===')">
+                    <div class="operator-symbol">===</div>
+                    <div class="operator-name">Қатаң тең</div>
+                    <div class="operator-desc">5 === "5" → false</div>
+                </div>
+                
+                <div class="operator-card" onclick="showOperatorExample('!=')">
+                    <div class="operator-symbol">!=</div>
+                    <div class="operator-name">Тең емес</div>
+                    <div class="operator-desc">5 != "6" → true</div>
+                </div>
+                
+                <div class="operator-card" onclick="showOperatorExample('!==')">
+                    <div class="operator-symbol">!==</div>
+                    <div class="operator-name">Қатаң тең емес</div>
+                    <div class="operator-desc">5 !== "5" → true</div>
+                </div>
+                
+                <div class="operator-card" onclick="showOperatorExample('>')">
+                    <div class="operator-symbol">></div>
+                    <div class="operator-name">Үлкен</div>
+                    <div class="operator-desc">10 > 5 → true</div>
+                </div>
+                
+                <div class="operator-card" onclick="showOperatorExample('<')">
+                    <div class="operator-symbol"><</div>
+                    <div class="operator-name">Кіші</div>
+                    <div class="operator-desc">3 < 7 → true</div>
+                </div>
+                
+                <div class="operator-card" onclick="showOperatorExample('>=')">
+                    <div class="operator-symbol">>=</div>
+                    <div class="operator-name">Үлкен/тең</div>
+                    <div class="operator-desc">5 >= 5 → true</div>
+                </div>
+                
+                <div class="operator-card" onclick="showOperatorExample('<=')">
+                    <div class="operator-symbol"><=</div>
+                    <div class="operator-name">Кіші/тең</div>
+                    <div class="operator-desc">4 <= 9 → true</div>
+                </div>
+            </div>
+
+            <div class="code-example" data-title="Барлық мысалдар" id="operatorExample">
+let a = 5;
+let b = "5";
+let c = 10;
+
+console.log(a == b);   // true  - мән бірдей
+console.log(a === b);  // false - түрі басқа  
+console.log(a != c);   // true  - мәндер басқа
+console.log(a !== b);  // true  - түрі басқа
+console.log(c > a);    // true  - 10 > 5
+console.log(a < c);    // true  - 5 < 10
+console.log(a >= 5);   // true  - 5 >= 5
+console.log(c <= 20);  // true  - 10 <= 20</div>
+        </div>
+
+        <div class="interactive-tester">
+            <h2 style="margin-bottom: 30px; font-size: 2.2em;">🧪 Интерактивті салыстырғыш</h2>
+            
+            <div class="tester-inputs">
+                <input type="text" class="tester-input" id="value1" placeholder="Бірінші мән" value="5">
+                <select class="operator-selector" id="comparisonOp">
+                    <option value="==">== (тең)</option>
+                    <option value="===">=== (қатаң тең)</option>
+                    <option value="!=">=!= (тең емес)</option>
+                    <option value="!==">=!== (қатаң тең емес)</option>
+                    <option value=">">> (үлкен)</option>
+                    <option value="<">< (кіші)</option>
+                    <option value=">=">>= (үлкен/тең)</option>
+                    <option value="<="<= (кіші/тең)</option>
+                </select>
+                <input type="text" class="tester-input" id="value2" placeholder="Екінші мән" value="5">
+                <div style="font-size: 2em; color: white;">→</div>
+            </div>
+            
+            <div class="test-result" id="comparisonResult">
+                5 == 5 = true
+            </div>
+            
+            <div class="demo-buttons">
+                <button class="demo-button" onclick="setExample('string')">Мәтін vs Сан</button>
+                <button class="demo-button" onclick="setExample('boolean')">Boolean тестілері</button>
+                <button class="demo-button" onclick="setExample('null')">null/undefined</button>
+                <button class="demo-button" onclick="setExample('zero')">Нөл мәндері</button>
+                <button class="demo-button" onclick="clearTester()">Тазалау</button>
+            </div>
+        </div>
+
+        <div class="truth-table">
+            <h2 style="text-align: center; color: #2d3436; margin-bottom: 30px;">📋 Шындық кестесі</h2>
+            
+            <div class="table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Мән 1</th>
+                            <th>Мән 2</th>
+                            <th>==</th>
+                            <th>===</th>
+                            <th>!=</th>
+                            <th>!==</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>5</td>
+                            <td>"5"</td>
+                            <td class="true-cell">true</td>
+                            <td class="false-cell">false</td>
+                            <td class="false-cell">false</td>
+                            <td class="true-cell">true</td>
+                        </tr>
+                        <tr>
+                            <td>0</td>
+                            <td>false</td>
+                            <td class="true-cell">true</td>
+                            <td class="false-cell">false</td>
+                            <td class="false-cell">false</td>
+                            <td class="true-cell">true</td>
+                        </tr>
+                        <tr>
+                            <td>null</td>
+                            <td>undefined</td>
+                            <td class="true-cell">true</td>
+                            <td class="false-cell">false</td>
+                            <td class="false-cell">false</td>
+                            <td class="true-cell">true</td>
+                        </tr>
+                        <tr>
+                            <td>""</td>
+                            <td>0</td>
+                            <td class="true-cell">true</td>
+                            <td class="false-cell">false</td>
+                            <td class="false-cell">false</td>
+                            <td class="true-cell">true</td>
+                        </tr>
+                        <tr>
+                            <td>true</td>
+                            <td>1</td>
+                            <td class="true-cell">true</td>
+                            <td class="false-cell">false</td>
+                            <td class="false-cell">false</td>
+                            <td class="true-cell">true</td>
+                        </tr>
+                        <tr>
+                            <td>[]</td>
+                            <td>""</td>
+                            <td class="true-cell">true</td>
+                            <td class="false-cell">false</td>
+                            <td class="false-cell">false</td>
+                            <td class="true-cell">true</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Маңызды ескерту:</strong> Жұмсақ салыстыру (==) кезінде JavaScript автоматты түрлендіру жасайды, бұл күтпеген нәтижелерге әкелуі мүмкін. Әрқашан қатаң салыстыру (===) пайдаланыңыз!
+            </div>
+        </div>
+
+        <div class="quiz-arena">
+            <div class="quiz-question">🧠 Сұрақ 1: "0" == 0 нәтижесі не?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkAnswer(this, true, 'true')">true</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false, 'true')">false</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false, 'true')">undefined</div>
+            </div>
+        </div>
+
+        <div class="quiz-arena">
+            <div class="quiz-question">🤔 Сұрақ 2: null === undefined нәтижесі?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkAnswer(this, false, 'false')">true</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true, 'false')">false</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false, 'false')">null</div>
+            </div>
+        </div>
+
+        <div class="quiz-arena">
+            <div class="quiz-question">💭 Сұрақ 3: Қай салыстыруды пайдалану керек?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkAnswer(this, false, '=== (қатаң)')">== (жұмсақ)</div>
+                <div class="quiz-option" onclick="checkAnswer(this, true, '=== (қатаң)')">=== (қатаң)</div>
+                <div class="quiz-option" onclick="checkAnswer(this, false, '=== (қатаң)')">Екеуі де дұрыс</div>
+            </div>
+        </div>
+
+        <div class="truth-table">
+            <h2 style="text-align: center; color: #2d3436; margin-bottom: 30px;">💡 Практикалық кеңестер</h2>
+            
+            <div class="tip-box">
+                <h3 style="margin-bottom: 15px;">🎯 Қашан қай операторды пайдалану керек?</h3>
+                <p><strong>===</strong> - Барлық жағдайда (ұсынылады)</p>
+                <p><strong>==</strong> - Тек null/undefined тексеру үшін</p>
+                <p><strong>>, <, >=, <=</strong> - Сандар мен мәтіндерді салыстыру үшін</p>
+            </div>
+
+            <div class="code-example" data-title="Жақсы практикалар">
+// ✅ Дұрыс тәсіл - қатаң салыстыру
+if (age === 18) {
+    console.log("Сіз кәмелетке толдыңыз!");
+}
+
+// ✅ null/undefined тексеру үшін
+if (value == null) { // null немесе undefined
+    console.log("Мән жоқ");
+}
+
+// ✅ Сандарды салыстыру
+if (score >= 90) {
+    console.log("Өте жақсы!");
+}
+
+// ❌ Жұмсақ салыстыруды болдырмау
+if (input == true) { // "1", 1, "true" - барлығы true болады
+    // Күтпеген нәтижелер!
+}</div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" onclick="previousLesson()">⬅️ Алдыңғы сабақ</button>
+            <span style="font-weight: bold; color: #667eea;">Салыстыру операторлары</span>
+            <button class="nav-button" onclick="nextLesson()">Келесі сабақ ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        // Оператор мысалдарын көрсету
+        function showOperatorExample(operator) {
+            const examples = {
+                '==': `// Жұмсақ салыстыру - түрлендіру жасайды
+console.log(5 == "5");        // true
+console.log(0 == false);      // true  
+console.log(null == undefined); // true
+console.log("" == 0);         // true`,
+
+                '===': `// Қатаң салыстыру - түрін де тексереді
+console.log(5 === "5");       // false
+console.log(0 === false);     // false
+console.log(null === undefined); // false
+console.log("hello" === "hello"); // true`,
+
+                '!=': `// Жұмсақ тең емес
+console.log(5 != "6");        // true
+console.log(0 != false);      // false
+console.log("a" != "b");      // true
+console.log(null != undefined); // false`,
+
+                '!==': `// Қатаң тең емес
+console.log(5 !== "5");       // true
+console.log(0 !== false);     // true
+console.log("a" !== "a");     // false
+console.log(null !== undefined); // true`,
+
+                '>': `// Үлкен
+console.log(10 > 5);          // true
+console.log("b" > "a");       // true (алфавит бойынша)
+console.log(15 > 20);         // false
+console.log("10" > 5);        // true (мәтін санға түрленеді)`,
+
+                '<': `// Кіші
+console.log(3 < 7);           // true
+console.log("a" < "b");       // true
+console.log(100 < 50);        // false
+console.log("5" < 10);        // true`,
+
+                '>=': `// Үлкен немесе тең
+console.log(5 >= 5);          // true
+console.log(10 >= 3);         // true
+console.log(2 >= 8);          // false
+console.log("abc" >= "abc");  // true`,
+
+                '<=': `// Кіші немесе тең
+console.log(4 <= 9);          // true
+console.log(7 <= 7);          // true
+console.log(15 <= 10);        // false
+console.log("x" <= "z");      // true`
+            };
+
+            document.getElementById('operatorExample').textContent = examples[operator] || examples['=='];
+        }
+
+        // Интерактивті тестер
+        function compareValues() {
+            const val1 = document.getElementById('value1').value;
+            const val2 = document.getElementById('value2').value;
+            const operator = document.getElementById('comparisonOp').value;
+            
+            // Мәндерді дұрыс түрге түрлендіру
+            let processedVal1 = val1;
+            let processedVal2 = val2;
+            
+            // Сандарды анықтау
+            if (!isNaN(val1) && val1 !== '') {
+                processedVal1 = Number(val1);
+            }
+            if (!isNaN(val2) && val2 !== '') {
+                processedVal2 = Number(val2);
+            }
+            
+            // Boolean мәндерін өңдеу
+            if (val1 === 'true') processedVal1 = true;
+            if (val1 === 'false') processedVal1 = false;
+            if (val2 === 'true') processedVal2 = true;
+            if (val2 === 'false') processedVal2 = false;
+            
+            // null/undefined өңдеу
+            if (val1 === 'null') processedVal1 = null;
+            if (val1 === 'undefined') processedVal1 = undefined;
+            if (val2 === 'null') processedVal2 = null;
+            if (val2 === 'undefined') processedVal2 = undefined;
+            
+            let result;
+            let displayVal1 = val1;
+            let displayVal2 = val2;
+            
+            // Мәтін ретінде көрсетілетін мәндер
+            if (typeof processedVal1 === 'string' && val1 !== 'null' && val1 !== 'undefined') {
+                displayVal1 = `"${val1}"`;
+            }
+            if (typeof processedVal2 === 'string' && val2 !== 'null' && val2 !== 'undefined') {
+                displayVal2 = `"${val2}"`;
+            }
+            
+            // Салыстыру орындау
+            switch(operator) {
+                case '==':
+                    result = processedVal1 == processedVal2;
+                    break;
+                case '===':
+                    result = processedVal1 === processedVal2;
+                    break;
+                case '!=':
+                    result = processedVal1 != processedVal2;
+                    break;
+                case '!==':
+                    result = processedVal1 !== processedVal2;
+                    break;
+                case '>':
+                    result = processedVal1 > processedVal2;
+                    break;
+                case '<':
+                    result = processedVal1 < processedVal2;
+                    break;
+                case '>=':
+                    result = processedVal1 >= processedVal2;
+                    break;
+                case '<=':
+                    result = processedVal1 <= processedVal2;
+                    break;
+                default:
+                    result = false;
+            }
+            
+            const resultElement = document.getElementById('comparisonResult');
+            resultElement.innerHTML = `${displayVal1} ${operator} ${displayVal2} = <strong>${result}</strong>`;
+            
+            // Нәтижеге сәйкес түс беру
+            resultElement.className = `test-result ${result ? 'result-true' : 'result-false'}`;
+        }
+
+        // Мысал орнату
+        function setExample(type) {
+            const examples = {
+                string: ['5', '"5"'],
+                boolean: ['true', '1'],
+                null: ['null', 'undefined'],
+                zero: ['0', 'false']
+            };
+            
+            const example = examples[type];
+            if (example) {
+                document.getElementById('value1').value = example[0];
+                document.getElementById('value2').value = example[1];
+                compareValues();
+            }
+        }
+
+        function clearTester() {
+            document.getElementById('value1').value = '';
+            document.getElementById('value2').value = '';
+            document.getElementById('comparisonResult').innerHTML = 'Мәндерді енгізіңіз';
+            document.getElementById('comparisonResult').className = 'test-result';
+        }
+
+        // Викторина функциясы
+        function checkAnswer(element, isCorrect, correctAnswer) {
+            // Бұрын басылған жауаптарды тазалау
+            element.parentNode.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+                opt.innerHTML = opt.innerHTML.replace(' ✅', '').replace(' ❌', '');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.innerHTML += ' ✅';
+                setTimeout(() => {
+                    alert(`🎉 Дұрыс! Жауабы: ${correctAnswer}`);
+                }, 300);
+            } else {
+                element.classList.add('wrong');
+                element.innerHTML += ' ❌';
+                
+                // Дұрыс жауапты көрсету
+                element.parentNode.querySelectorAll('.quiz-option').forEach(opt => {
+                    if (opt.innerHTML.includes(correctAnswer) && !opt.classList.contains('wrong')) {
+                        opt.classList.add('correct');
+                        opt.innerHTML += ' ✅ (дұрыс)';
+                    }
+                });
+                
+                setTimeout(() => {
+                    alert(`❌ Дұрыс емес. Дұрыс жауабы: ${correctAnswer}`);
+                }, 300);
+            }
+        }
+
+        // Навигация
+        function previousLesson() {
+            alert('🔄 Алдыңғы сабаққа оралу...');
+        }
+
+        function nextLesson() {
+            alert('🚀 Келесі сабақ: "Логикалық операторлар"');
+        }
+
+        // Автоматты есептеу
+        document.getElementById('value1').addEventListener('input', compareValues);
+        document.getElementById('value2').addEventListener('input', compareValues);
+        document.getElementById('comparisonOp').addEventListener('change', compareValues);
+
+        // Бастапқы орнату
+        window.onload = function() {
+            compareValues();
+            
+            // Console-ға мысалдар
+            setTimeout(() => {
+                console.log('⚖️ Салыстыру операторлары мысалдары:');
+                console.log('== vs ===:');
+                console.log('5 == "5":', 5 == "5");
+                console.log('5 === "5":', 5 === "5");
+                console.log('0 == false:', 0 == false);
+                console.log('0 === false:', 0 === false);
+                console.log('null == undefined:', null == undefined);
+                console.log('null === undefined:', null === undefined);
+                
+                console.log('\n💡 Сандық салыстырулар:');
+                console.log('10 > 5:', 10 > 5);
+                console.log('3 <= 3:', 3 <= 3);
+                console.log('"a" < "b":', "a" < "b");
+                console.log('"10" > 5:', "10" > 5);
+            }, 2000);
+            
+            // Қауіпті мысалдар
+            setTimeout(() => {
+                console.log('\n⚠️ Қауіпті жұмсақ салыстырулар:');
+                console.log('[] == "":', [] == "");
+                console.log('[] == 0:', [] == 0);
+                console.log('"" == 0:', "" == 0);
+                console.log('false == "0":', false == "0");
+                console.log('\n✅ Қатаң салыстыру пайдаланыңыз!');
+            }, 5000);
+        };
+
+        // Клавиатура shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                compareValues();
+            }
+            if (e.key === 'Escape') {
+                clearTester();
+            }
+        });
+    </script>
+</body>
+</html>
