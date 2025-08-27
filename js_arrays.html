@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Массивтер - Интерактивті сабақ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.3); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 30px rgba(255,255,255,0.5); }
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.3em;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .lesson-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            animation: slideUp 0.8s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .lesson-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #764ba2, transparent);
+            animation: slideRight 3s infinite;
+        }
+
+        @keyframes slideRight {
+            to { left: 100%; }
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #f0f0f0;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .code-block:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .code-block::before {
+            content: 'JavaScript';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #667eea;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .array-visual {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow-x: auto;
+            align-items: center;
+            min-height: 80px;
+        }
+
+        .array-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            animation: bounceIn 0.5s ease;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .array-item:hover {
+            transform: translateY(-10px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .array-index {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff6b6b;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            margin: 10px 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .output {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 1.1em;
+            min-height: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .output.success {
+            border-left-color: #4caf50;
+            background: #e8f5e9;
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .method-card {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .method-card:hover::before {
+            left: 100%;
+        }
+
+        .method-card:hover {
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transform: translateX(10px);
+        }
+
+        .method-name {
+            color: #764ba2;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(253, 203, 110, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .tip-box::before {
+            content: '💡';
+            font-size: 2em;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .emoji-icon {
+            font-size: 2em;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px;
+            transition: width 1s ease;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 JavaScript Массивтер</h1>
+            <p>Интерактивті және қызықты сабақ</p>
+        </div>
+
+        <div class="lesson-section">
+            <h2 class="section-title">📚 Массив дегеніміз не?</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; color: #555;">
+                <span class="emoji-icon">📦</span> Массив - бұл бір айнымалыда бірнеше мәндерді сақтауға арналған контейнер. 
+                Массивті заттарды сақтайтын қорапшалар қатары ретінде елестетіңіз!
+            </p>
+            
+            <div class="tip-box">
+                <p><strong>Кеңес:</strong> Массивтер реттелген тізім болып табылады. Әр элементтің өз индексі бар, және индекс 0-ден басталады!</p>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2 class="section-title">🎨 Массив құру</h2>
+            
+            <div class="code-block">
+                <pre>// Бос массив құру
+let менімМассивім = [];
+
+// Мәндермен массив құру
+let жемістер = ['алма', 'банан', 'апельсин', 'шие'];
+
+// Сандармен массив
+let сандар = [1, 2, 3, 4, 5];
+
+// Әртүрлі типтегі мәндер
+let аралас = ['текст', 42, true, null];</pre>
+            </div>
+
+            <div class="interactive-demo">
+                <h3 style="color: #667eea; margin-bottom: 15px;">🎯 Интерактивті мысал:</h3>
+                <button class="btn" onclick="createArray()">Жаңа массив құру</button>
+                <div id="arrayDisplay" class="array-visual"></div>
+                <div id="arrayOutput" class="output"></div>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2 class="section-title">🔍 Массив элементтеріне қол жеткізу</h2>
+            
+            <div class="code-block">
+                <pre>let жемістер = ['алма', 'банан', 'апельсин'];
+
+// Индекс арқылы элементке қол жеткізу
+console.log(жемістер[0]);  // 'алма'
+console.log(жемістер[1]);  // 'банан'
+console.log(жемістер[2]);  // 'апельсин'
+
+// Соңғы элемент
+console.log(жемістер[жемістер.length - 1]);  // 'апельсин'</pre>
+            </div>
+
+            <div class="interactive-demo">
+                <h3 style="color: #667eea; margin-bottom: 15px;">🎮 Өзіңіз байқап көріңіз:</h3>
+                <div id="accessArray" class="array-visual"></div>
+                <button class="btn" onclick="accessElement(0)">Индекс [0]</button>
+                <button class="btn" onclick="accessElement(1)">Индекс [1]</button>
+                <button class="btn" onclick="accessElement(2)">Индекс [2]</button>
+                <button class="btn" onclick="accessElement(-1)">Соңғы элемент</button>
+                <div id="accessOutput" class="output"></div>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2 class="section-title">⚡ Негізгі массив әдістері</h2>
+            
+            <div class="method-card">
+                <div class="method-name">push() - Соңына қосу</div>
+                <div class="code-block">
+                    <pre>let массив = [1, 2, 3];
+массив.push(4);
+console.log(массив);  // [1, 2, 3, 4]</pre>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-name">pop() - Соңынан алу</div>
+                <div class="code-block">
+                    <pre>let массив = [1, 2, 3, 4];
+let соңғы = массив.pop();
+console.log(соңғы);    // 4
+console.log(массив);   // [1, 2, 3]</pre>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-name">unshift() - Басына қосу</div>
+                <div class="code-block">
+                    <pre>let массив = [2, 3, 4];
+массив.unshift(1);
+console.log(массив);  // [1, 2, 3, 4]</pre>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-name">shift() - Басынан алу</div>
+                <div class="code-block">
+                    <pre>let массив = [1, 2, 3, 4];
+let бірінші = массив.shift();
+console.log(бірінші);  // 1
+console.log(массив);   // [2, 3, 4]</pre>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3 style="color: #667eea; margin-bottom: 15px;">🛠️ Әдістерді тексеру:</h3>
+                <div id="methodArray" class="array-visual"></div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <button class="btn" onclick="arrayPush()">Push қосу</button>
+                    <button class="btn" onclick="arrayPop()">Pop алу</button>
+                    <button class="btn" onclick="arrayUnshift()">Unshift қосу</button>
+                    <button class="btn" onclick="arrayShift()">Shift алу</button>
+                    <button class="btn" onclick="resetMethodArray()">Қалпына келтіру</button>
+                </div>
+                <div id="methodOutput" class="output"></div>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2 class="section-title">🔄 Массивпен жұмыс істеу</h2>
+            
+            <div class="method-card">
+                <div class="method-name">forEach() - Әр элементпен жұмыс</div>
+                <div class="code-block">
+                    <pre>let сандар = [1, 2, 3, 4, 5];
+
+сандар.forEach(function(сан) {
+    console.log(сан * 2);
+});
+// Нәтиже: 2, 4, 6, 8, 10</pre>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-name">map() - Жаңа массив құру</div>
+                <div class="code-block">
+                    <pre>let сандар = [1, 2, 3, 4, 5];
+
+let екіЕселенген = сандар.map(function(сан) {
+    return сан * 2;
+});
+console.log(екіЕселенген);  // [2, 4, 6, 8, 10]</pre>
+                </div>
+            </div>
+
+            <div class="method-card">
+                <div class="method-name">filter() - Сүзгілеу</div>
+                <div class="code-block">
+                    <pre>let сандар = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+let жұпСандар = сандар.filter(function(сан) {
+    return сан % 2 === 0;
+});
+console.log(жұпСандар);  // [2, 4, 6, 8, 10]</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2 class="section-title">🎯 Практикалық тапсырма</h2>
+            
+            <div class="interactive-demo">
+                <h3 style="color: #667eea; margin-bottom: 15px;">📝 Тапсырма: Оқушылардың бағалары</h3>
+                <p style="margin-bottom: 15px;">Оқушылардың бағаларымен жұмыс істейміз:</p>
+                
+                <div id="gradesArray" class="array-visual"></div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+                    <button class="btn" onclick="calculateAverage()">Орташа балл</button>
+                    <button class="btn" onclick="findMax()">Ең жоғары баға</button>
+                    <button class="btn" onclick="findMin()">Ең төмен баға</button>
+                    <button class="btn" onclick="countExcellent()">Өте жақсы бағалар</button>
+                </div>
+                
+                <div id="taskOutput" class="output"></div>
+            </div>
+        </div>
+
+        <div class="lesson-section">
+            <h2 class="section-title">🏆 Білімді тексеру</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+            
+            <div class="interactive-demo">
+                <h3 style="color: #667eea; margin-bottom: 15px;">❓ Сұрақтар:</h3>
+                
+                <div id="quiz" style="margin: 20px 0;">
+                    <p style="font-size: 1.2em; margin-bottom: 15px;">1. Массивтің бірінші элементінің индексі қандай?</p>
+                    <button class="btn" onclick="checkAnswer(1, 0)">0</button>
+                    <button class="btn" onclick="checkAnswer(1, 1)">1</button>
+                    <button class="btn" onclick="checkAnswer(1, -1)">-1</button>
+                </div>
+                
+                <div id="quizOutput" class="output"></div>
+            </div>
+        </div>
+
+        <div class="lesson-section" style="text-align: center; background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+            <h2 style="color: white; border-bottom: 3px solid white; display: inline-block; padding-bottom: 10px; margin-bottom: 30px;">
+                🎉 Құттықтаймыз!
+            </h2>
+            <p style="font-size: 1.3em; margin-bottom: 20px;">
+                Сіз JavaScript массивтері туралы негізгі білімді меңгердіңіз!
+            </p>
+            <p style="font-size: 1.1em; opacity: 0.9;">
+                Енді сіз массивтермен жұмыс істей аласыз және оларды өз жобаларыңызда қолдана аласыз!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Массивтер для демонстрации
+        let demoArray = ['алма', 'банан', 'апельсин', 'шие'];
+        let methodDemoArray = [1, 2, 3];
+        let gradesArray = [85, 92, 78, 95, 88, 73, 90, 87];
+
+        // Инициализация
+        window.onload = function() {
+            displayArray('accessArray', demoArray);
+            displayArray('methodArray', methodDemoArray);
+            displayArray('gradesArray', gradesArray);
+        };
+
+        function displayArray(elementId, array) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+            array.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'array-item';
+                div.innerHTML = `<span class="array-index">${index}</span>${item}`;
+                container.appendChild(div);
+            });
+        }
+
+        function createArray() {
+            const fruits = ['🍎 алма', '🍌 банан', '🍊 апельсин', '🍒 шие', '🍇 жүзім'];
+            displayArray('arrayDisplay', fruits);
+            document.getElementById('arrayOutput').innerHTML = 
+                `✅ Жаңа массив құрылды! Ұзындығы: ${fruits.length}`;
+            document.getElementById('arrayOutput').className = 'output success';
+        }
+
+        function accessElement(index) {
+            const output = document.getElementById('accessOutput');
+            if (index === -1) {
+                output.innerHTML = `🎯 Соңғы элемент: ${demoArray[demoArray.length - 1]} (индекс: ${demoArray.length - 1})`;
+            } else {
+                output.innerHTML = `🎯 Индекс [${index}] = ${demoArray[index]}`;
+            }
+            output.className = 'output success';
+        }
+
+        function arrayPush() {
+            const newItem = Math.floor(Math.random() * 10) + 1;
+            methodDemoArray.push(newItem);
+            displayArray('methodArray', methodDemoArray);
+            document.getElementById('methodOutput').innerHTML = 
+                `✅ Push: ${newItem} қосылды. Жаңа массив: [${methodDemoArray}]`;
+            document.getElementById('methodOutput').className = 'output success';
+        }
+
+        function arrayPop() {
+            if (methodDemoArray.length > 0) {
+                const removed = methodDemoArray.pop();
+                displayArray('methodArray', methodDemoArray);
+                document.getElementById('methodOutput').innerHTML = 
+                    `✅ Pop: ${removed} алынды. Жаңа массив: [${methodDemoArray}]`;
+                document.getElementById('methodOutput').className = 'output success';
+            }
+        }
+
+        function arrayUnshift() {
+            const newItem = Math.floor(Math.random() * 10) + 1;
+            methodDemoArray.unshift(newItem);
+            displayArray('methodArray', methodDemoArray);
+            document.getElementById('methodOutput').innerHTML = 
+                `✅ Unshift: ${newItem} басына қосылды. Жаңа массив: [${methodDemoArray}]`;
+            document.getElementById('methodOutput').className = 'output success';
+        }
+
+        function arrayShift() {
+            if (methodDemoArray.length > 0) {
+                const removed = methodDemoArray.shift();
+                displayArray('methodArray', methodDemoArray);
+                document.getElementById('methodOutput').innerHTML = 
+                    `✅ Shift: ${removed} басынан алынды. Жаңа массив: [${methodDemoArray}]`;
+                document.getElementById('methodOutput').className = 'output success';
+            }
+        }
+
+        function resetMethodArray() {
+            methodDemoArray = [1, 2, 3];
+            displayArray('methodArray', methodDemoArray);
+            document.getElementById('methodOutput').innerHTML = '🔄 Массив қалпына келтірілді';
+        }
+
+        function calculateAverage() {
+            const sum = gradesArray.reduce((a, b) => a + b, 0);
+            const avg = (sum / gradesArray.length).toFixed(2);
+            document.getElementById('taskOutput').innerHTML = 
+                `📊 Орташа балл: ${avg}`;
+            document.getElementById('taskOutput').className = 'output success';
+        }
+
+        function findMax() {
+            const max = Math.max(...gradesArray);
+            document.getElementById('taskOutput').innerHTML = 
+                `🏆 Ең жоғары баға: ${max}`;
+            document.getElementById('taskOutput').className = 'output success';
+        }
+
+        function findMin() {
+            const min = Math.min(...gradesArray);
+            document.getElementById('taskOutput').innerHTML = 
+                `📉 Ең төмен баға: ${min}`;
+            document.getElementById('taskOutput').className = 'output success';
+        }
+
+        function countExcellent() {
+            const excellent = gradesArray.filter(grade => grade >= 90).length;
+            document.getElementById('taskOutput').innerHTML = 
+                `⭐ Өте жақсы бағалар саны (90+): ${excellent}`;
+            document.getElementById('taskOutput').className = 'output success';
+        }
+
+        function checkAnswer(question, answer) {
+            const output = document.getElementById('quizOutput');
+            if (question === 1 && answer === 0) {
+                output.innerHTML = '✅ Дұрыс! Массивтің бірінші элементінің индексі 0.';
+                output.className = 'output success';
+                document.getElementById('progress').style.width = '100%';
+            } else {
+                output.innerHTML = '❌ Дұрыс емес. Қайта байқап көріңіз!';
+                output.className = 'output';
+            }
+        }
+    </script>
+</body>
+</html>
