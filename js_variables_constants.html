@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Сабақтары - Айнымалылар</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .lesson-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .lesson-title {
+            font-size: 2.2em;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .lesson-content {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .code-block {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .demo-button:hover {
+            background: white;
+            color: #f5576c;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .type-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .type-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .type-card:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .type-card.active {
+            border-color: #f5576c;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        }
+
+        .type-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .variable-demo {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            color: white;
+        }
+
+        .input-group {
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .result-display {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #e17055;
+        }
+
+        .highlight-box strong {
+            color: #d63031;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 20%;
+            border-radius: 10px;
+            transition: width 2s ease;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quiz-section {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            color: white;
+        }
+
+        .quiz-question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(10px);
+        }
+
+        .quiz-option.correct {
+            border-color: #00cec9;
+            background: rgba(0, 206, 201, 0.3);
+        }
+
+        .quiz-option.wrong {
+            border-color: #e17055;
+            background: rgba(225, 112, 85, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 JavaScript Сабақтары</h1>
+            <p style="font-size: 1.3em; color: #666;">Айнымалылар мен деректер түрлері</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <p><strong>Сабақ 2:</strong> Айнымалылар және деректер түрлері</p>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">📦</div>
+                Айнымалы дегеніміз не?
+            </div>
+            <div class="lesson-content">
+                <p><strong>Айнымалы</strong> - бұл ақпаратты сақтауға арналған контейнер. Қорапша сияқты, ішіне әртүрлі заттарды салып қоюға болады:</p>
+                
+                <div class="code-block" data-lang="JavaScript">
+// Айнымалы жариялау (декларация)
+let myName = "Асем";           // Мәтін (string)
+let myAge = 25;               // Сан (number) 
+let isStudent = true;         // Логикалық мән (boolean)
+
+// Айнымалыларды пайдалану
+console.log("Менің атым: " + myName);
+console.log("Менің жасым: " + myAge);
+console.log("Мен студентпін: " + isStudent);</div>
+
+                <div class="interactive-demo">
+                    <h3 style="margin-bottom: 20px;">🎮 Айнымалы құрушысы</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; text-align: left;">
+                        <div class="input-group">
+                            <label>Айнымалы аты:</label>
+                            <input type="text" id="varName" placeholder="myVariable" value="myName">
+                        </div>
+                        <div class="input-group">
+                            <label>Мәні:</label>
+                            <input type="text" id="varValue" placeholder="Мәнді енгізіңіз" value="Алия">
+                        </div>
+                        <div class="input-group">
+                            <label>Түрі:</label>
+                            <select id="varType">
+                                <option value="string">Мәтін (string)</option>
+                                <option value="number">Сан (number)</option>
+                                <option value="boolean">Логика (boolean)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="demo-button" onclick="createVariable()">Айнымалы құру</button>
+                    <div class="result-display" id="variableResult">
+                        let myName = "Алия";
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">🔤</div>
+                Айнымалы жариялау тәсілдері
+            </div>
+            <div class="lesson-content">
+                <p>JavaScript-те айнымалы жариялаудың үш тәсілі бар:</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Кілт сөз</th>
+                            <th>Сипаттамасы</th>
+                            <th>Өзгертуге болады</th>
+                            <th>Қайта жариялау</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>let</strong></td>
+                            <td>Заманауи тәсіл, блок ауқымы</td>
+                            <td>✅ Иә</td>
+                            <td>❌ Жоқ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>const</strong></td>
+                            <td>Тұрақты мән, өзгермейді</td>
+                            <td>❌ Жоқ</td>
+                            <td>❌ Жоқ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>var</strong></td>
+                            <td>Ескі тәсіл, функция ауқымы</td>
+                            <td>✅ Иә</td>
+                            <td>✅ Иә</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block" data-lang="JavaScript">
+// let - мәнін өзгертуге болады
+let city = "Алматы";
+city = "Астана";  // Дұрыс
+
+// const - тұрақты мән
+const country = "Қазақстан";
+// country = "Франция";  // Қате! Өзгертуге болмайды
+
+// var - ескі тәсіл (қолданбаған дұрыс)
+var oldVariable = "Бұл ескі тәсіл";</div>
+
+                <div class="variable-demo">
+                    <h3>🧪 Айнымалыларды сынау</h3>
+                    <button class="demo-button" onclick="testLet()">let сынау</button>
+                    <button class="demo-button" onclick="testConst()">const сынау</button>
+                    <button class="demo-button" onclick="testVar()">var сынау</button>
+                    <div class="result-display" id="varTestResult">
+                        Батырманы басып сынап көріңіз
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">🎭</div>
+                JavaScript-тегі деректер түрлері
+            </div>
+            <div class="lesson-content">
+                <p>JavaScript-те жеті негізгі деректер түрі бар:</p>
+
+                <div class="type-grid">
+                    <div class="type-card" onclick="showTypeDemo('string')">
+                        <div class="type-icon">📝</div>
+                        <h3>String (Мәтін)</h3>
+                        <p>"Сәлем" немесе 'Әлем'</p>
+                    </div>
+                    <div class="type-card" onclick="showTypeDemo('number')">
+                        <div class="type-icon">🔢</div>
+                        <h3>Number (Сан)</h3>
+                        <p>42, 3.14, -15</p>
+                    </div>
+                    <div class="type-card" onclick="showTypeDemo('boolean')">
+                        <div class="type-icon">✅</div>
+                        <h3>Boolean (Логика)</h3>
+                        <p>true немесе false</p>
+                    </div>
+                    <div class="type-card" onclick="showTypeDemo('undefined')">
+                        <div class="type-icon">❓</div>
+                        <h3>Undefined</h3>
+                        <p>Мәні жоқ</p>
+                    </div>
+                    <div class="type-card" onclick="showTypeDemo('null')">
+                        <div class="type-icon">⭕</div>
+                        <h3>Null</h3>
+                        <p>Бос мән</p>
+                    </div>
+                    <div class="type-card" onclick="showTypeDemo('object')">
+                        <div class="type-icon">📋</div>
+                        <h3>Object (Объект)</h3>
+                        <p>{name: "Айжан"}</p>
+                    </div>
+                    <div class="type-card" onclick="showTypeDemo('symbol')">
+                        <div class="type-icon">🔣</div>
+                        <h3>Symbol</h3>
+                        <p>Бірегей белгі</p>
+                    </div>
+                </div>
+
+                <div class="interactive-demo">
+                    <h3 id="typeTitle">🎯 Деректер түрін анықтау</h3>
+                    <div class="result-display" id="typeDemo">
+                        Жоғарыдағы карточкаларды басып көріңіз
+                    </div>
+                    <button class="demo-button" onclick="checkAllTypes()">Барлық түрлерді тексеру</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">🔄</div>
+                Түрлер арасында түрлендіру
+            </div>
+            <div class="lesson-content">
+                <p>JavaScript-те деректерді бір түрден екіншіге түрлендіруге болады:</p>
+
+                <div class="code-block" data-lang="JavaScript">
+// Санды мәтінге түрлендіру
+let num = 123;
+let str = String(num);        // "123"
+let str2 = num.toString();    // "123"
+
+// Мәтінді санға түрлендіру
+let text = "456";
+let number = Number(text);    // 456
+let number2 = parseInt(text); // 456
+
+// Boolean-ға түрлендіру  
+let bool1 = Boolean(1);       // true
+let bool2 = Boolean(0);       // false
+let bool3 = Boolean("");      // false
+let bool4 = Boolean("text");  // true</div>
+
+                <div class="variable-demo">
+                    <h3>🔄 Түрлендіру калькуляторы</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: left;">
+                        <div class="input-group">
+                            <label>Мән:</label>
+                            <input type="text" id="convertValue" placeholder="Мәнді енгізіңіз" value="123">
+                        </div>
+                        <div class="input-group">
+                            <label>Түрлендіру:</label>
+                            <select id="convertTo">
+                                <option value="string">String-ке</option>
+                                <option value="number">Number-ге</option>
+                                <option value="boolean">Boolean-ға</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="demo-button" onclick="convertType()">Түрлендіру</button>
+                    <div class="result-display" id="convertResult">
+                        Нәтиже осында көрсетіледі
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-title">
+                <div class="icon">🧠</div>
+                Практикалық тапсырмалар
+            </div>
+            
+            <div class="quiz-section">
+                <div class="quiz-question">Сұрақ 1: Қай кілт сөз тұрақты мән үшін пайдаланылады?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">let</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">const</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">var</div>
+                </div>
+            </div>
+
+            <div class="quiz-section">
+                <div class="quiz-question">Сұрақ 2: "Hello" мәнінің түрі қандай?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">number</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">string</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">boolean</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>Тапсырма:</strong> Өз атыңыз, жасыңыз және хоббиіңіз туралы айнымалылар құрып, console.log() арқылы шығарыңыз.
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" onclick="previousLesson()">⬅️ Алдыңғы сабақ</button>
+            <span style="font-weight: bold; color: #667eea;">Сабақ 2 / 10</span>
+            <button class="nav-button" onclick="nextLesson()">Келесі сабақ ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        // Айнымалы құру демосы
+        function createVariable() {
+            const name = document.getElementById('varName').value || 'myVariable';
+            const value = document.getElementById('varValue').value || '';
+            const type = document.getElementById('varType').value;
+            
+            let formattedValue = value;
+            if (type === 'string') {
+                formattedValue = `"${value}"`;
+            } else if (type === 'number') {
+                formattedValue = parseFloat(value) || 0;
+            } else if (type === 'boolean') {
+                formattedValue = value.toLowerCase() === 'true' || value === '1' ? 'true' : 'false';
+            }
+            
+            const result = `let ${name} = ${formattedValue};`;
+            document.getElementById('variableResult').textContent = result;
+            
+            // Console-ға да жазу
+            console.log(`Құрылған айнымалы: ${result}`);
+        }
+
+        // Айнымалы түрлерін сынау
+        function testLet() {
+            let testVar = "Алматы";
+            testVar = "Астана";
+            document.getElementById('varTestResult').innerHTML = 
+                `let city = "Алматы";<br>city = "Астана"; // ✅ Жұмыс істейді<br>Нәтиже: ${testVar}`;
+        }
+
+        function testConst() {
+            const testConst = "Қазақстан";
+            document.getElementById('varTestResult').innerHTML = 
+                `const country = "Қазақстан";<br>// country = "Франция"; // ❌ Қате<br>Нәтиже: ${testConst}`;
+        }
+
+        function testVar() {
+            var testVar = "Ескі тәсіл";
+            document.getElementById('varTestResult').innerHTML = 
+                `var oldWay = "Ескі тәсіл";<br>// Қазір let/const пайдаланыңыз<br>Нәтиже: ${testVar}`;
+        }
+
+        // Деректер түрлерін көрсету
+        function showTypeDemo(type) {
+            // Барлық карточкаларды бастапқы күйге қайтару
+            document.querySelectorAll('.type-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Басылған карточканы белсенді ету
+            event.target.closest('.type-card').classList.add('active');
+            
+            const examples = {
+                string: {
+                    title: '📝 String (Мәтін) түрі',
+                    demo: `let message = "Сәлем Әлем!";<br>let name = 'Айжан';<br>typeof message = "${typeof "Сәлем"}"<br>Ұзындығы: ${"Сәлем".length}`
+                },
+                number: {
+                    title: '🔢 Number (Сан) түрі',
+                    demo: `let age = 25;<br>let price = 99.99;<br>typeof age = "${typeof 25}"<br>Максимум: ${Number.MAX_SAFE_INTEGER}`
+                },
+                boolean: {
+                    title: '✅ Boolean (Логика) түрі',
+                    demo: `let isActive = true;<br>let isComplete = false;<br>typeof isActive = "${typeof true}"<br>Тек екі мән: true, false`
+                },
+                undefined: {
+                    title: '❓ Undefined түрі',
+                    demo: `let notDefined;<br>typeof notDefined = "${typeof undefined}"<br>Мәні берілмеген айнымалы`
+                },
+                null: {
+                    title: '⭕ Null түрі', 
+                    demo: `let empty = null;<br>typeof empty = "${typeof null}"<br>Қасақана бос мән`
+                },
+                object: {
+                    title: '📋 Object түрі',
+                    demo: `let person = {name: "Асем", age: 30};<br>typeof person = "${typeof {}}"<br>Күрделі деректер түрі`
+                },
+                symbol: {
+                    title: '🔣 Symbol түрі',
+                    demo: `let sym = Symbol('id');<br>typeof sym = "${typeof Symbol()}"<br>Бірегей идентификатор`
+                }
+            };
+            
+            const typeInfo = examples[type];
+            document.getElementById('typeTitle').textContent = typeInfo.title;
+            document.getElementById('typeDemo').innerHTML = typeInfo.demo;
+        }
+
+        function checkAllTypes() {
+            const allTypes = `
+                string: "${typeof "мәтін"}"<br>
+                number: "${typeof 42}"<br>
+                boolean: "${typeof true}"<br>
+                undefined: "${typeof undefined}"<br>
+                null: "${typeof null}" (ерекше!)<br>
+                object: "${typeof {}}"<br>
+                symbol: "${typeof Symbol()}"
+            `;
+            document.getElementById('typeDemo').innerHTML = allTypes;
+        }
+
+        // Түрлендіру функциясы
+        function convertType() {
+            const value = document.getElementById('convertValue').value;
+            const convertTo = document.getElementById('convertTo').value;
+            
+            let result, originalType, newType, convertedValue;
+            
+            // Бастапқы түрді анықтау
+            if (!isNaN(value) && value !== '') {
+                originalType = 'number';
+                convertedValue = parseFloat(value);
+            } else {
+                originalType = 'string';
+                convertedValue = value;
+            }
+            
+            // Түрлендіру
+            switch(convertTo) {
+                case 'string':
+                    result = String(convertedValue);
+                    newType = typeof result;
+                    break;
+                case 'number':
+                    result = Number(convertedValue);
+                    newType = typeof result;
+                    break;
+                case 'boolean':
+                    result = Boolean(convertedValue);
+                    newType = typeof result;
+                    break;
+            }
+            
+            document.getElementById('convertResult').innerHTML = 
+                `Бастапқы: ${value} (${originalType})<br>
+                 Түрлендірілген: ${result} (${newType})<br>
+                 Код: ${convertTo.charAt(0).toUpperCase() + convertTo.slice(1)}("${value}")`;
+        }
+
+        // Викторина функциялары
+        function checkAnswer(element, isCorrect) {
+            // Бұрын басылған жауаптарды тазалау
+            element.parentNode.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+                element.innerHTML += ' ✅';
+                setTimeout(() => {
+                    alert('🎉 Дұрыс жауап!');
+                }, 100);
+            } else {
+                element.classList.add('wrong');
+                element.innerHTML += ' ❌';
+                setTimeout(() => {
+                    alert('❌ Дұрыс емес. Қайта көріңіз!');
+                }, 100);
+            }
+        }
+
+        // Навигация функциялары
+        function previousLesson() {
+            if (confirm('Алдыңғы сабаққа оралу керек пе?')) {
+                alert('🔄 Алдыңғы сабаққа оралу...');
+                // Бұл жерде алдыңғы сабаққа өту логикасы болады
+            }
+        }
+
+        function nextLesson() {
+            alert('🎉 Тамаша! Келесі сабақ: "Операторлар және өрнектер"');
+            // Бұл жерде келесі сабаққа өту логикасы болады
+        }
+
+        // Progress bar анимациясы
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('progressBar').style.width = '20%';
+            }, 1000);
+            
+            // Автоматты түрде бірінші деректер түрін көрсету
+            setTimeout(() => {
+                showTypeDemo('string');
+            }, 2000);
+        }
+
+        // Клавиатура комбинациялары
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
+                toggleDarkMode();
+            }
+            if (e.ctrlKey && e.key === 'Enter') {
+                createVariable();
+            }
+        });
+
+        // Түнгі режим
+        let isDarkMode = false;
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)';
+                document.querySelectorAll('.lesson-card, .header, .navigation').forEach(el => {
+                    el.style.background = 'rgba(52, 73, 94, 0.95)';
+                    el.style.color = '#ecf0f1';
+                });
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                document.querySelectorAll('.lesson-card, .header, .navigation').forEach(el => {
+                    el.style.background = 'rgba(255, 255, 255, 0.95)';
+                    el.style.color = '#333';
+                });
+            }
+        }
+
+        // Автоматты мысалдар генераторы
+        function generateRandomExample() {
+            const names = ['Асем', 'Арман', 'Айжан', 'Ержан', 'Камила', 'Бауыржан'];
+            const cities = ['Алматы', 'Нұр-Сұлтан', 'Шымкент', 'Қарағанды', 'Өскемен'];
+            const hobbies = ['оқу', 'спорт', 'музыка', 'сурет салу', 'саяхат'];
+            
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            const randomAge = Math.floor(Math.random() * 50) + 18;
+            const randomCity = cities[Math.floor(Math.random() * cities.length)];
+            const randomHobby = hobbies[Math.floor(Math.random() * hobbies.length)];
+            
+            return {
+                name: randomName,
+                age: randomAge,
+                city: randomCity,
+                hobby: randomHobby
+            };
+        }
+
+        // Console-ға автоматты мысал жазу
+        setTimeout(() => {
+            const example = generateRandomExample();
+            console.log('🎯 Автоматты мысал:');
+            console.log(`let name = "${example.name}";`);
+            console.log(`let age = ${example.age};`);
+            console.log(`let city = "${example.city}";`);
+            console.log(`let hobby = "${example.hobby}";`);
+            console.log(`let isAdult = ${example.age >= 18};`);
+            console.log('📝 Осы мысалды өзіңіз де жасап көріңіз!');
+        }, 3000);
+
+        // Интерактивті кеңестер
+        const tips = [
+            '💡 Кеңес: Айнымалы атауларын ағылшын тілінде жазыңыз',
+            '🎯 Кеңес: const пайдаланып көріңіз, мән өзгермейтін болса',
+            '⚡ Кеңес: F12 басып Console табын ашып, кодтарды сынаңыз',
+            '🔍 Кеңес: typeof операторы арқылы түрді тексеріңіз',
+            '📚 Кеңес: Айнымалы атауларын мағыналы етіп қойыңыз'
+        ];
+
+        let tipIndex = 0;
+        setInterval(() => {
+            console.log(tips[tipIndex]);
+            tipIndex = (tipIndex + 1) % tips.length;
+        }, 10000);
+
+        // Прогресс трекинг
+        let completedTasks = 0;
+        const totalTasks = 5;
+
+        function updateProgress() {
+            completedTasks++;
+            const percentage = (completedTasks / totalTasks) * 20; // 20% за урок
+            document.getElementById('progressBar').style.width = percentage + '%';
+            
+            if (completedTasks === totalTasks) {
+                setTimeout(() => {
+                    alert('🏆 Сабақ аяқталды! Сіз барлық тапсырмаларды орындадыңыз!');
+                }, 500);
+            }
+        }
+
+        // Тапсырмалар аяқталғанда прогресс жаңарту
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('demo-button') || 
+                e.target.classList.contains('quiz-option')) {
+                updateProgress();
+            }
+        });
+    </script>
+</body>
+</html>
